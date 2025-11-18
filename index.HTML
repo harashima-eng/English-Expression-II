@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文法ブレイクダウン INDEX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f4f4f9;
+            --card-bg: #ffffff;
+            --text-main: #222;
+            --accent: #6366f1;
+            --accent-soft: rgba(99,102,241,0.12);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+        }
+
+        body.dark {
+            --bg: #050816;
+            --card-bg: #0b1020;
+            --text-main: #f9fafb;
+            --accent: #a855f7;
+            --accent-soft: rgba(168,85,247,0.18);
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN",
+            "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+            background: radial-gradient(circle at top, #c4b5fd 0, transparent 50%),
+                        radial-gradient(circle at bottom, #f97316 0, transparent 55%),
+                        var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text-main);
+            transition: background 0.4s ease, color 0.3s ease;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 900px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+            border-radius: 26px;
+            padding: 2px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .container {
+            border-radius: 24px;
+            background: var(--card-bg);
+            padding: 28px 22px 24px;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding: 32px 32px 26px;
+            }
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .title-block h1 {
+            font-size: 1.6rem;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .title-block p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .mode-toggle {
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(15,23,42,0.02);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.1s ease;
+        }
+
+        .mode-toggle span.icon {
+            font-size: 1rem;
+        }
+
+        .mode-toggle:hover {
+            background: rgba(148,163,184,0.15);
+        }
+
+        .mode-toggle:active {
+            transform: scale(0.97);
+        }
+
+        .intro {
+            background: var(--accent-soft);
+            border-radius: 18px;
+            padding: 14px 16px;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+        }
+
+        .intro strong {
+            font-weight: 600;
+        }
+
+        .list-wrap {
+            margin-top: 12px;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(100,116,139,0.95);
+            margin-bottom: 10px;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .link-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .card-link {
+            position: relative;
+            display: block;
+            padding: 16px 16px 14px;
+            border-radius: 16px;
+            text-decoration: none;
+            background: radial-gradient(circle at top left, rgba(99,102,241,0.2), transparent 55%),
+                        radial-gradient(circle at bottom right, rgba(56,189,248,0.18), transparent 55%),
+                        var(--card-bg);
+            border: 1px solid rgba(148,163,184,0.55);
+            box-shadow: 0 10px 26px rgba(15,23,42,0.18);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+            color: inherit;
+        }
+
+        .card-link::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.55), transparent 60%);
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+
+        .card-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(15,23,42,0.28);
+            border-color: var(--accent);
+        }
+
+        .card-link:hover::after {
+            opacity: 1;
+        }
+
+        .card-tag {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 6px;
+            color: rgba(15,23,42,0.6);
+        }
+
+        body.dark .card-tag {
+            color: rgba(226,232,240,0.7);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .card-sub {
+            font-size: 0.9rem;
+            opacity: 0.88;
+            margin-bottom: 8px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            opacity: 0.9;
+        }
+
+        .card-meta span.right {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-meta span.right::after {
+            content: "↗";
+            font-size: 0.9rem;
+        }
+
+        .footer-note {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <div class="container">
+            <div class="header-row">
+                <div class="title-block">
+                    <h1>文法ブレイクダウン INDEX</h1>
+                    <p>Grammar_Breakdown シリーズへの入口ページ</p>
+                </div>
+                <button class="mode-toggle" id="modeToggle" type="button">
+                    <span class="icon" id="modeIcon">🌞</span>
+                    <span id="modeLabel">Light</span>
+                </button>
+            </div>
+
+            <div class="intro">
+                <strong>使い方：</strong><br>
+                下のカードをクリックすると、仮定法の文法ブレイクダウンページ
+                (<code>Grammar_Breakdown_仮定法.html</code>) が開きます。  
+                GitHub Pages のルートにこの <code>index.html</code> を置けば、トップページとして表示されます。
+            </div>
+
+            <div class="list-wrap">
+                <div class="section-title">Grammar Breakdowns</div>
+                <div class="link-grid">
+                    <!-- 仮定法ページへのリンク -->
+                    <a class="card-link" href="Grammar_Breakdown_仮定法.html">
+                        <div class="card-tag">仮定法 / Conditionals</div>
+                        <div class="card-title">Grammar_Breakdown_仮定法</div>
+                        <div class="card-sub">
+                            仮定法の基本から応用までを、日本語サポートつきで解説するブレイクダウンページ。
+                        </div>
+                        <div class="card-meta">
+                            <span>期末試験範囲サポート</span>
+                            <span class="right">Open</span>
+                        </div>
+                    </a>
+
+                    <!-- ここに今後のファイルを増やせるように空きカードを用意（必要なら複製して使う） -->
+                    <!--
+                    <a class="card-link" href="Grammar_Breakdown_〇〇.html">
+                        <div class="card-tag">テーマタグ</div>
+                        <div class="card-title">Grammar_Breakdown_〇〇</div>
+                        <div class="card-sub">
+                            説明用テキスト。別の文法単元を追加したくなったら、ここをコピペして編集。
+                        </div>
+                        <div class="card-meta">
+                            <span>準備中</span>
+                            <span class="right">Open</span>
+                        </div>
+                    </a>
+                    -->
+                </div>
+            </div>
+
+            <div class="footer-note">
+                GitHub Pages 用 index.html（必要に応じてリンクを追加していってOK）
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const modeLabel = document.getElementById('modeLabel');
+
+        function setMode(dark) {
+            if (dark) {
+                document.body.classList.add('dark');
+                modeIcon.textContent = '🌙';
+                modeLabel.textContent = 'Dark';
+                localStorage.setItem('gb-index-theme', 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                modeIcon.textContent = '🌞';
+                modeLabel.textContent = 'Light';
+                localStorage.setItem('gb-index-theme', 'light');
+            }
+        }
+
+        // 初期モード（ローカルストレージ or システム設定）
+        (function initTheme() {
+            const saved = localStorage.getItem('gb-index-theme');
+            if (saved === 'dark') {
+                setMode(true);
+            } else if (saved === 'light') {
+                setMode(false);
+            } else if (window.matchMedia &&
+                       window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setMode(true);
+            } else {
+                setMode(false);
+            }
+        })();
+
+        toggleBtn.addEventListener('click', () => {
+            const isDark = document.body.classList.contains('dark');
+            setMode(!isDark);
+        });
+    </script>
+</body>
+</html>
