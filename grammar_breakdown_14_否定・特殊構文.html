@@ -1,507 +1,1329 @@
-diff --git a/grammar_breakdown_14_否定・特殊構文.html b/grammar_breakdown_14_否定・特殊構文.html
-new file mode 100644
-index 0000000000000000000000000000000000000000..3f5077e0c35319dd1b6cfae0b7ac45a3c5abdcb2
---- /dev/null
-+++ b/grammar_breakdown_14_否定・特殊構文.html
-@@ -0,0 +1,501 @@
-+<!DOCTYPE html>
-+<html lang="ja">
-+  <head>
-+    <meta charset="UTF-8">
-+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+    <title>Grammar Breakdown 14｜否定・特殊構文</title>
-+    <style>
-+      :root {
-+        --bg: #0f172a;
-+        --card: #0b223b;
-+        --accent: #a855f7;
-+        --accent-2: #22d3ee;
-+        --text: #e2e8f0;
-+        --muted: #94a3b8;
-+        --surface: rgba(12,21,38,0.8);
-+        --border: rgba(148,163,184,0.2);
-+      }
-+
-+    * { box-sizing: border-box; }
-+
-+    body {
-+      margin: 0;
-+      font-family: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
-+      background: radial-gradient(circle at 20% 20%, rgba(34,211,238,0.08), transparent 25%),
-+                  radial-gradient(circle at 80% 10%, rgba(168,85,247,0.08), transparent 30%),
-+                  linear-gradient(135deg, #0f172a 0%, #0b1221 100%);
-+      color: var(--text);
-+      min-height: 100vh;
-+      padding: 40px 16px 60px;
-+      line-height: 1.7;
-+      scroll-behavior: smooth;
-+    }
-+
-+      .shell {
-+        max-width: 1100px;
-+        margin: 0 auto;
-+        background: var(--surface);
-+        border: 1px solid var(--border);
-+        border-radius: 20px;
-+        padding: 32px;
-+        box-shadow: 0 20px 80px rgba(0,0,0,0.35);
-+        backdrop-filter: blur(8px);
-+      }
-+
-+    header {
-+      display: flex;
-+      flex-wrap: wrap;
-+      gap: 12px;
-+      align-items: center;
-+      justify-content: space-between;
-+      margin-bottom: 28px;
-+    }
-+
-+      h1 {
-+        font-size: 1.9rem;
-+        letter-spacing: 0.02em;
-+        margin: 0;
-+        display: flex;
-+        gap: 10px;
-+        align-items: center;
-+      }
-+
-+      .badge {
-+        display: inline-flex;
-+        align-items: center;
-+        gap: 6px;
-+        padding: 6px 12px;
-+        border-radius: 999px;
-+        background: rgba(34,211,238,0.12);
-+        color: #67e8f9;
-+        font-weight: 600;
-+        font-size: 0.9rem;
-+        border: 1px solid rgba(34,211,238,0.35);
-+        box-shadow: 0 4px 16px rgba(34,211,238,0.18);
-+      }
-+
-+    p.lead {
-+      margin: 6px 0 0;
-+      color: var(--muted);
-+      line-height: 1.7;
-+    }
-+
-+    .grid {
-+      display: grid;
-+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-+      gap: 18px;
-+      margin-top: 20px;
-+    }
-+
-+    .card {
-+      background: var(--card);
-+      border: 1px solid var(--border);
-+      border-radius: 16px;
-+      padding: 18px;
-+      position: relative;
-+      overflow: hidden;
-+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-+      transition: transform 0.18s ease, border-color 0.18s ease;
-+    }
-+
-+    .card::after {
-+      content: '';
-+      position: absolute;
-+      inset: 0;
-+      background: radial-gradient(circle at 20% 20%, rgba(168,85,247,0.14), transparent 50%);
-+      pointer-events: none;
-+    }
-+
-+    .card:hover { transform: translateY(-2px); border-color: rgba(168,85,247,0.35); }
-+
-+    .card h2 {
-+      margin: 0 0 8px;
-+      font-size: 1.2rem;
-+      letter-spacing: 0.01em;
-+    }
-+
-+    .card p { margin: 6px 0; color: var(--muted); line-height: 1.6; }
-+
-+    .tag {
-+      display: inline-flex;
-+      align-items: center;
-+      gap: 6px;
-+      padding: 4px 10px;
-+      margin: 6px 6px 0 0;
-+      border-radius: 10px;
-+      background: rgba(168,85,247,0.14);
-+      color: #e9d5ff;
-+      font-size: 0.85rem;
-+      border: 1px solid rgba(168,85,247,0.35);
-+    }
-+
-+    .example {
-+      margin-top: 12px;
-+      padding: 12px 14px;
-+      background: rgba(30,41,59,0.8);
-+      border-radius: 12px;
-+      border: 1px solid rgba(148,163,184,0.25);
-+      line-height: 1.6;
-+      display: grid;
-+      gap: 4px;
-+      transition: border-color 0.15s ease;
-+    }
-+
-+    .example:hover { border-color: rgba(34,211,238,0.4); }
-+
-+    .example .en { color: #c7d2fe; font-weight: 600; }
-+    .example .jp { color: var(--muted); }
-+
-+    details {
-+      background: rgba(30,41,59,0.7);
-+      border: 1px solid rgba(148,163,184,0.2);
-+      border-radius: 12px;
-+      padding: 12px 14px;
-+      margin-top: 12px;
-+    }
-+
-+    summary {
-+      cursor: pointer;
-+      font-weight: 700;
-+      letter-spacing: 0.01em;
-+    }
-+
-+    .steps {
-+      list-style: decimal;
-+      padding-left: 20px;
-+      margin: 8px 0 0;
-+      color: var(--muted);
-+      line-height: 1.6;
-+    }
-+
-+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-+    .pill { padding: 6px 10px; border-radius: 10px; background: rgba(34,211,238,0.12); color: #67e8f9; font-weight: 600; font-size: 0.85rem; }
-+
-+    .section-title {
-+      margin-top: 26px;
-+      font-size: 1.3rem;
-+      display: flex;
-+      align-items: center;
-+      gap: 8px;
-+      color: #cbd5e1;
-+    }
-+
-+    .highlight { color: #a5b4fc; font-weight: 700; }
-+
-+    .toolbar {
-+      display: flex;
-+      flex-wrap: wrap;
-+      gap: 12px;
-+      align-items: center;
-+      justify-content: space-between;
-+      background: rgba(30,41,59,0.4);
-+      border: 1px solid var(--border);
-+      border-radius: 14px;
-+      padding: 12px 14px;
-+      margin: 8px 0 16px;
-+    }
-+
-+    .toc { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-+    .chip {
-+      background: rgba(148,163,184,0.12);
-+      padding: 6px 10px;
-+      border-radius: 10px;
-+      color: #cbd5e1;
-+      font-weight: 600;
-+      border: 1px solid var(--border);
-+    }
-+
-+    .toc a {
-+      color: #a5b4fc;
-+      text-decoration: none;
-+      padding: 6px 10px;
-+      border-radius: 10px;
-+      background: rgba(168,85,247,0.08);
-+      border: 1px solid rgba(168,85,247,0.25);
-+      font-weight: 600;
-+      transition: background 0.15s ease, color 0.15s ease;
-+    }
-+
-+    .toc a:hover { background: rgba(168,85,247,0.18); color: #e9d5ff; }
-+
-+    .view-toggle { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-+    .mode-btn {
-+      padding: 6px 12px;
-+      border-radius: 10px;
-+      border: 1px solid var(--border);
-+      background: rgba(34,211,238,0.12);
-+      color: #67e8f9;
-+      font-weight: 700;
-+      cursor: pointer;
-+      transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
-+    }
-+
-+    .mode-btn.active {
-+      background: rgba(168,85,247,0.2);
-+      color: #f5e1ff;
-+      border-color: rgba(168,85,247,0.5);
-+      box-shadow: 0 10px 20px rgba(168,85,247,0.2);
-+    }
-+
-+    .mode-btn:hover { transform: translateY(-1px); }
-+
-+    .muted {
-+      color: var(--muted);
-+      font-size: 0.95rem;
-+      margin: 6px 0 0;
-+    }
-+
-+    .top-btn {
-+      position: fixed;
-+      right: 18px;
-+      bottom: 18px;
-+      padding: 10px 14px;
-+      background: rgba(168,85,247,0.18);
-+      color: #f5e1ff;
-+      border: 1px solid rgba(168,85,247,0.4);
-+      border-radius: 12px;
-+      cursor: pointer;
-+      font-weight: 700;
-+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-+      display: none;
-+      backdrop-filter: blur(4px);
-+    }
-+
-+    .top-btn.show { display: inline-flex; align-items: center; gap: 6px; }
-+
-+    @media (max-width: 640px) {
-+      body { padding: 20px 12px; }
-+      header { gap: 6px; }
-+      .shell { padding: 24px; }
-+      .toolbar { align-items: flex-start; }
-+    }
-+
-+    /* Language toggles */
-+    body[data-view="en"] .jp { display: none; }
-+    body[data-view="jp"] .en { display: none; }
-+    body[data-view="jp"] .example { gap: 0; }
-+    body[data-view="en"] .example { gap: 0; }
-+    body[data-view="both"] .example { gap: 4px; }
-+    </style>
-+  </head>
-+  <body data-view="both">
-+    <div class="shell">
-+      <header>
-+      <div>
-+        <h1>Grammar Breakdown 14｜否定・特殊構文</h1>
-+        <p class="lead">否定文の作り方から倒置を伴う特殊構文まで、入試・授業で頻出の形をまとめました。例文は「日本語→英文」の順で確認できます。</p>
-+      </div>
-+      <span class="badge">Unit 14</span>
-+    </header>
-+
-+    <div class="toolbar">
-+      <div class="toc">
-+        <span class="chip">セクションへ移動</span>
-+        <a href="#basic">基本の否定</a>
-+        <a href="#partial">部分否定</a>
-+        <a href="#special">倒置構文</a>
-+        <a href="#connect">連結・付加</a>
-+        <a href="#check">クイックチェック</a>
-+      </div>
-+      <div class="view-toggle">
-+        <span class="chip">表示</span>
-+        <button class="mode-btn active" data-mode="both">日英</button>
-+        <button class="mode-btn" data-mode="jp">日本語のみ</button>
-+        <button class="mode-btn" data-mode="en">English only</button>
-+      </div>
-+    </div>
-+
-+    <div class="pill-row">
-+      <span class="pill">Basic Negative</span>
-+      <span class="pill">Partial / Emphatic</span>
-+      <span class="pill">Inversion</span>
-+      <span class="pill">Not until / No sooner</span>
-+    </div>
-+
-+    <h2 id="basic" class="section-title">1. 基本の否定</h2>
-+    <div class="grid">
-+      <div class="card">
-+        <h2>一般動詞の否定</h2>
-+        <p>do/does/did + not を用いる。<span class="highlight">3単現のsは do に移動</span>する点に注意。</p>
-+        <div class="example">
-+          <div class="jp">彼は朝食を食べ<strong>ない</strong>。</div>
-+          <div class="en">He <span class="highlight">doesn't eat</span> breakfast.</div>
-+        </div>
-+        <details>
-+          <summary>Step</summary>
-+          <ol class="steps">
-+            <li>動詞の前に do/does/did を置く</li>
-+            <li>do を not で否定する（短縮可）</li>
-+            <li>動詞は原形に戻す</li>
-+          </ol>
-+        </details>
-+      </div>
-+
-+      <div class="card">
-+        <h2>be動詞・助動詞の否定</h2>
-+        <p>be / can / will などの直後に not を置く。疑問文と同じく語順変化なし。</p>
-+        <div class="example">
-+          <div class="jp">その答えは正しく<strong>ない</strong>。</div>
-+          <div class="en">The answer <span class="highlight">is not</span> correct.</div>
-+        </div>
-+        <div class="example">
-+          <div class="jp">彼女は今夜来<strong>ないかもしれない</strong>。</div>
-+          <div class="en">She <span class="highlight">may not</span> come tonight.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>否定語の選択</h2>
-+        <p><span class="highlight">no / none / never / nobody / nothing</span> などは「強い否定」。文頭に置くと倒置を引き起こす場合あり。</p>
-+        <div class="example">
-+          <div class="jp">私は二度とそこへは行<strong>かない</strong>。</div>
-+          <div class="en">I will <span class="highlight">never</span> go there again.</div>
-+        </div>
-+      </div>
-+    </div>
-+
-+    <h2 id="partial" class="section-title">2. 部分否定と数量表現</h2>
-+    <div class="grid">
-+      <div class="card">
-+        <h2>部分否定（not all / not every）</h2>
-+        <p>全体を否定するのではなく「一部は違う」。<span class="highlight">not all + 複数名詞</span> で覚える。</p>
-+        <div class="example">
-+          <div class="jp">全ての生徒が賛成しているわけではない。</div>
-+          <div class="en"><span class="highlight">Not all</span> the students agree.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>no / little / few のニュアンス</h2>
-+        <p>no = 0、little/few = ほとんどない。a little/a few にすると「少しはある」。</p>
-+        <div class="example">
-+          <div class="jp">その計画にはほとんど時間が残されていない。</div>
-+          <div class="en">There is <span class="highlight">little</span> time left for the plan.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>not always / not necessarily</h2>
-+        <p>頻度副詞や necessarily を否定して「いつも〜とは限らない」。</p>
-+        <div class="example">
-+          <div class="jp">早起きが必ずしも成功を保証するとは限らない。</div>
-+          <div class="en">Getting up early <span class="highlight">does not necessarily</span> guarantee success.</div>
-+        </div>
-+      </div>
-+    </div>
-+
-+    <h2 id="special" class="section-title">3. 否定を強調する特殊構文</h2>
-+    <div class="grid">
-+      <div class="card">
-+        <h2>否定語＋倒置（Hardly / Rarely / Never, etc.）</h2>
-+        <p>文頭に強い否定副詞を置くと、<span class="highlight">助動詞／do が主語より前</span>に来る倒置が起こる。</p>
-+        <div class="example">
-+          <div class="jp">こんなに美しい景色を見たことはほとんどない。</div>
-+          <div class="en"><span class="highlight">Rarely have I</span> seen such a beautiful view.</div>
-+        </div>
-+        <details>
-+          <summary>頻出の否定副詞</summary>
-+          <div class="pill-row">
-+            <span class="pill">Hardly</span>
-+            <span class="pill">Rarely</span>
-+            <span class="pill">Seldom</span>
-+            <span class="pill">Never</span>
-+            <span class="pill">Little</span>
-+          </div>
-+        </details>
-+      </div>
-+
-+      <div class="card">
-+        <h2>Not until ...</h2>
-+        <p>従属節の否定を前に出すと主節が倒置に。元の語順（It was not until ... that S V）も可。</p>
-+        <div class="example">
-+          <div class="jp">ベルが鳴るまで、私たちは授業が終わったことに気づかなかった。</div>
-+          <div class="en"><span class="highlight">Not until</span> the bell rang <span class="highlight">did we</span> notice the class was over.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>No sooner ... than ~</h2>
-+        <p>「〜するとすぐに…」の強調形。<span class="highlight">No sooner + had + S + pp + than</span> で覚える。</p>
-+        <div class="example">
-+          <div class="jp">彼女は家に着くやいなや友達に電話した。</div>
-+          <div class="en"><span class="highlight">No sooner had</span> she arrived home <span class="highlight">than</span> she called her friend.</div>
-+        </div>
-+      </div>
-+    </div>
-+
-+    <h2 id="connect" class="section-title">4. 連結・付加の否定</h2>
-+    <div class="grid">
-+      <div class="card">
-+        <h2>not only A but also B（倒置あり）</h2>
-+        <p>文頭に置くと <span class="highlight">Not only + V + S ...</span> と倒置。強調したいときに使用。</p>
-+        <div class="example">
-+          <div class="jp">彼は英語だけでなくフランス語も話せる。</div>
-+          <div class="en"><span class="highlight">Not only can</span> he speak English, <span class="highlight">but also</span> French.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>Neither A nor B</h2>
-+        <p>2つをともに否定。「どちらも〜ない」。動詞は直後の主語に一致させる。</p>
-+        <div class="example">
-+          <div class="jp">私も妹も猫にアレルギーは<strong>ない</strong>。</div>
-+          <div class="en"><span class="highlight">Neither</span> I <span class="highlight">nor</span> my sister <span class="highlight">is</span> allergic to cats.</div>
-+        </div>
-+      </div>
-+
-+      <div class="card">
-+        <h2>否定の付加（..., either / neither do I）</h2>
-+        <p>肯定に付ける too/so に対して、否定は <span class="highlight">either / neither</span> を使用。</p>
-+        <div class="example">
-+          <div class="jp">私は辛いものが得意ではない。彼もそうだ。</div>
-+          <div class="en">I am not good with spicy food. <span class="highlight">Neither am I</span>.</div>
-+        </div>
-+      </div>
-+    </div>
-+
-+    <h2 id="check" class="section-title">5. 確認用クイックチェック</h2>
-+    <div class="card">
-+      <p>下線部に入る最適な形を考えて、否定構文が正しく使えているか確認しましょう。</p>
-+      <ol class="steps">
-+        <li><span class="highlight">( )</span> had the train left than it began to rain. → No sooner</li>
-+        <li><span class="highlight">( )</span> did she realize her mistake. → Only then / Never</li>
-+        <li>He has <span class="highlight">( )</span> friends in this city. → few / very few</li>
-+        <li><span class="highlight">( )</span> the students passed the exam. → Not all</li>
-+        <li>I can hardly wait. →「ほとんど待てない」= 我慢できないほど楽しみ、のポジティブ意味に注意</li>
-+      </ol>
-+    </div>
-+  </div>
-+
-+  <button class="top-btn" id="backTop">▲ Top</button>
-+
-+  <script>
-+    const body = document.body;
-+    const modeButtons = document.querySelectorAll('.mode-btn');
-+    const backTop = document.getElementById('backTop');
-+
-+    modeButtons.forEach((btn) => {
-+      btn.addEventListener('click', () => {
-+        modeButtons.forEach((b) => b.classList.remove('active'));
-+        btn.classList.add('active');
-+        body.setAttribute('data-view', btn.dataset.mode);
-+      });
-+    });
-+
-+    const toggleTopBtn = () => {
-+      if (window.scrollY > 280) {
-+        backTop.classList.add('show');
-+      } else {
-+        backTop.classList.remove('show');
-+      }
-+    };
-+
-+    backTop.addEventListener('click', () => {
-+      window.scrollTo({ top: 0, behavior: 'smooth' });
-+    });
-+
-+    document.addEventListener('scroll', toggleTopBtn, { passive: true });
-+    toggleTopBtn();
-+  </script>
-+</body>
-+</html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grammar Breakdown 14｜UltraLite v4 (Full Virtualization)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+  /* iOS Notes-like neutral grays */
+  --bg:#f2f3f5;            /* page gray */
+  --bg-card:#ffffff;      /* note paper */
+  --text:#111827;         /* near-black */
+  --text-soft:#6b7280;    /* iOS secondary label-ish */
+
+  --accent:#4f46e5;       /* keep your purple for labels */
+  --accent-soft: rgba(79,70,229,.07);
+
+  --border:#e2e5ea;       /* hairline gray */
+  --hint:#2563eb; 
+  --answer:#16a34a; 
+  --warn:#f59e0b;
+
+  --shadow:0 1px 4px rgba(15,23,42,.05);
+  --shell-shadow:0 6px 18px rgba(15,23,42,.12);
+
+  --radius:20px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --speed-fast:.10s; --speed:.16s; --speed-slow:.22s;
+}
+    body.dark{
+  --bg:#0b0d12;           /* notes dark paper */
+  --bg-card:#121621;
+  --text:#e5e7eb;
+  --text-soft:#9ca3af;
+
+  --accent:#8a93ff;
+  --accent-soft: rgba(138,147,255,.12);
+
+  --border:#1a2030;
+  --shadow:0 2px 8px rgba(0,0,0,.5);
+  --shell-shadow:0 8px 20px rgba(0,0,0,.65);
+}
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important;animation:none !important;scroll-behavior:auto !important;}
+    }
+    body{
+      font-family: system-ui, -apple-system, "SF Pro Text","Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      background: linear-gradient(180deg,#0a0c10 0%, #05070a 100%);
+      color:var(--text); padding:12px; min-height:100vh;
+      scroll-behavior:smooth;
+    }
+    .shell{
+      max-width:1120px; margin:0 auto; background:var(--bg);
+      border-radius:20px; overflow:hidden;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:var(--shell-shadow);
+      transform:translateY(3px); opacity:0;
+      animation:shellIn .35s var(--ease) forwards;
+    }
+    @keyframes shellIn{to{transform:translateY(0);opacity:1;}}
+    header{
+      color:#e5e7eb; padding:16px 16px;
+      border-bottom:1px solid rgba(148,163,184,.28);
+      display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+      position:sticky; top:0; z-index:20;
+      background: linear-gradient(135deg, rgba(2,6,23,.98), rgba(30,64,175,.96));
+    }
+    header h1{font-size:1.12rem;letter-spacing:.015em;}
+    header .sub{font-size:.82rem;color:#cbd5f5;}
+    .btn{
+      cursor:pointer;border:none;outline:none; padding:8px 13px;border-radius:999px;
+      font-size:.82rem;font-weight:800; letter-spacing:.015em;
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(9,13,27,.94); color:#e5e7eb;
+      border:1px solid rgba(148,163,184,.55);
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      will-change:transform;
+    }
+    .btn:active{transform:translateY(1px) scale(.98);}
+    .btn.ghost{background:transparent;color:var(--text);border-color:var(--border);}
+    @media (hover:hover){
+      .btn:hover{background:rgba(30,64,175,.98);transform:translateY(-1px);}
+      .btn.ghost:hover{background:rgba(79,70,229,.055);border-color:var(--accent);}
+      .q-item:hover{transform:translateY(-1px);}
+      .mini:hover{transform:translateY(-1px);background:rgba(79,70,229,.055);border-color:var(--accent);}
+      .qa-box:hover{border-color:rgba(79,70,229,.55);background:rgba(79,70,229,.02);}
+    }
+    .topbar{
+      padding:8px 10px; background:var(--bg);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+      font-size:.8rem;color:var(--text-soft);
+    }
+    main{ padding:12px; }
+    .section{
+      border:0.7px solid var(--border);
+      background:var(--bg-card);
+      border-radius:14px; padding:12px; margin-bottom:12px;
+      contain: layout paint;
+    }
+    .section h2{
+      font-size:.96rem;
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:6px;
+    }
+    .tag{
+      font-size:.7rem;padding:2px 9px;border-radius:999px;background:rgba(79,70,229,.055);
+      color:var(--accent);font-weight:800;
+      border:1px solid rgba(79,70,229,.20);
+    }
+    .q-item{
+      padding:12px 12px 14px; margin-top:10px;
+      border-top:0.7px dashed rgba(148,163,184,.45);
+      border-radius:12px; position:relative;
+      background:var(--bg-card);
+      box-shadow:var(--shadow);
+      transition:transform var(--speed-fast) var(--ease);
+      will-change:transform;
+      contain: content;
+    }
+    .q-item:first-of-type{border-top:none;margin-top:0;}
+    .q-label{font-weight:900;color:var(--accent);font-size:.9rem;margin-bottom:4px;}
+    .q-jp{font-size:.88rem;color:var(--text-soft);margin-bottom:3px;}
+    .q-en{font-size:1rem;line-height:1.82;}
+    .q-raw{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size:.86rem;background:rgba(15,23,42,.05);
+      padding:6px 7px;border-radius:8px;margin-top:6px; white-space:pre-wrap; line-height:1.6;
+      border:0.7px solid var(--border);
+    }
+    .toggle-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+    .mini{
+      cursor:pointer;border:none;outline:none; padding:6px 11px;border-radius:999px;
+      font-size:.78rem;font-weight:900; letter-spacing:.015em;
+      display:inline-flex;align-items:center;gap:6px;
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      border:0.7px solid var(--border);
+      background:transparent;color:var(--text);
+      will-change:transform;
+    }
+    .mini.hint{border-color:rgba(37,99,235,.35);}
+    .mini.answer{border-color:rgba(22,163,74,.35);}
+    .mini.warn{border-color:rgba(245,158,11,.5);}
+
+    .accordion{
+      display:grid; grid-template-rows:0fr;
+      transition:grid-template-rows var(--speed-slow) var(--ease);
+    }
+    .accordion.open{grid-template-rows:1fr;}
+    .accordion-inner{
+      overflow:hidden;
+      opacity:0; transform:translateY(-3px);
+      transition:opacity var(--speed) var(--ease), transform var(--speed) var(--ease);
+    }
+    .accordion.open .accordion-inner{opacity:1; transform:translateY(0);}
+
+    .ex{ margin-top:8px;display:grid;gap:8px; }
+    .bubble{
+      border-radius:12px;padding:10px 12px;
+      border-left:5px solid transparent; background:rgba(15,23,42,.03);
+      font-size:.98rem;line-height:1.82;
+    }
+    .bubble .label{font-weight:900;font-size:.78rem;letter-spacing:.05em;margin-bottom:5px;}
+    .bubble.hint{ border-left-color:var(--hint); background:rgba(37,99,235,.06); }
+    .bubble.answer{ border-left-color:var(--answer); background:rgba(22,163,74,.06); }
+    .bubble.warn{ border-left-color:var(--warn); background:rgba(245,158,11,.08); }
+    .bubble .jp{color:var(--text-soft);font-size:.85rem;margin-top:5px;}
+
+    .qa-split{margin-top:8px;display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+    @media(max-width:720px){ .qa-split{grid-template-columns:1fr;} }
+    .qa-box{
+      background:transparent;border:1.4px solid var(--border);border-radius:12px;
+      padding:7px 9px 9px;position:relative;contain:layout paint;
+      transition:border var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease);
+    }
+    .qa-box::before{
+      content:""; position:absolute; left:9px; right:9px; top:0;
+      height:3px; border-radius:999px; background:var(--border);
+    }
+    .qa-box.hint::before{ background:linear-gradient(90deg,var(--hint),transparent); }
+    .qa-box.answer::before{ background:linear-gradient(90deg,var(--answer),transparent); }
+    .qa-head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:.82rem;font-weight:900;padding-top:4px;}
+    .qa-body{ margin-top:6px; font-size:.98rem; line-height:1.82; }
+    .qa-body .jp{color:var(--text-soft);font-size:.85rem;margin-top:5px;}
+
+    .hintless-note{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:.76rem;font-weight:800;color:var(--warn);
+      background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+      padding:2px 7px;border-radius:999px;margin-left:6px;
+    }
+
+    .q-placeholder{
+      margin-top:10px;
+      border-radius:12px;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,.015), rgba(15,23,42,.03)),
+        linear-gradient(90deg, transparent, rgba(79,70,229,.06), transparent);
+      border:0.7px solid var(--border);
+      padding:12px;
+      min-height:120px;
+      display:grid;
+      gap:10px;
+      align-content:center;
+      color:var(--text-soft);
+      font-size:.82rem;
+    }
+    .q-placeholder .sk-line{
+      height:10px;border-radius:999px;
+      background:rgba(15,23,42,.06);
+    }
+    .q-placeholder .sk-line.wide{width:88%;}
+    .q-placeholder .sk-line.mid{width:64%;}
+    .q-placeholder .sk-line.short{width:40%;}
+    .q-placeholder .sk-chip{
+      width:90px;height:20px;border-radius:999px;
+      background:rgba(79,70,229,.10);
+      border:1px solid rgba(79,70,229,.18);
+    }
+    /* super-light shimmer */
+    .q-placeholder::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%);
+      transform:translateX(-120%);
+      animation: shimmer 1.8s linear infinite;
+      will-change: transform;
+      pointer-events:none;
+      opacity:.6;
+    }
+    body.dark .q-placeholder::after{
+      background:linear-gradient(100deg, transparent 30%, rgba(129,140,248,.22) 50%, transparent 70%);
+      opacity:.8;
+    }
+    @keyframes shimmer{to{transform:translateX(120%);}}
+    @media (prefers-reduced-motion: reduce){
+      .q-placeholder::after{animation:none;}
+    }
+  
+    /* Freeze heavy paint during active scroll (perf win) */
+    body.scrolling .q-item,
+    body.scrolling .qa-box,
+    body.scrolling .bubble,
+    body.scrolling .q-placeholder{
+      box-shadow:none !important;
+      transition:none !important;
+    }
+    body.scrolling .q-placeholder::after{ animation:none !important; opacity:0.2 !important; }
+
+  
+    /* ===== Mac-app chrome (static, perf-safe) ===== */
+    .appbar{
+      position:sticky; top:0; z-index:30;
+      display:flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      background:rgba(255,255,255,.9);
+      backdrop-filter:saturate(1.2) blur(8px);
+      border-bottom:0.7px solid var(--border);
+    }
+    body.dark .appbar{
+      background:rgba(12,16,26,.92);
+      backdrop-filter:saturate(1.15) blur(8px);
+    }
+    .traffic{
+      display:flex; gap:6px; padding:4px 6px; border-radius:999px;
+      background:rgba(0,0,0,.04);
+      border:0.7px solid var(--border);
+    }
+    body.dark .traffic{ background:rgba(255,255,255,.04); }
+    .dot{width:12px;height:12px;border-radius:50%;}
+    .dot.red{background:#ff5f57;}
+    .dot.yellow{background:#febc2e;}
+    .dot.green{background:#28c840;}
+    .app-title{
+      font-weight:900; font-size:.9rem; letter-spacing:.02em;
+      color:var(--text);
+    }
+    .app-actions{margin-left:auto; display:flex; gap:6px; flex-wrap:wrap;}
+
+    .layout{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 0px);
+    }
+    @media(max-width:920px){
+      .layout{ grid-template-columns: 1fr; }
+      .sidebar{ position:static; border-right:none; border-bottom:0.7px solid var(--border); }
+    }
+
+    .sidebar{
+      position:sticky; top:52px; height:calc(100vh - 52px);
+      overflow:auto; padding:10px;
+      background:var(--bg);
+      border-right:0.7px solid var(--border);
+      -webkit-overflow-scrolling: touch;
+    }
+    .side-group{margin-bottom:10px;}
+    .side-title{
+      font-size:.72rem; font-weight:900; color:var(--text-soft);
+      text-transform:uppercase; letter-spacing:.12em;
+      padding:6px 8px;
+    }
+    .side-item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 10px; border-radius:10px;
+      font-size:.9rem; color:var(--text);
+      cursor:pointer;
+      border:0.7px solid transparent;
+      transition:background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+    }
+    @media(hover:hover){
+      .side-item:hover{
+        background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.18);
+      }
+    }
+    .side-item.active{
+      background:rgba(79,70,229,.10);
+      border-color:rgba(79,70,229,.25);
+      font-weight:900;
+    }
+    .side-pill{
+      font-size:.7rem; font-weight:900; color:var(--accent);
+      background:rgba(79,70,229,.08);
+      padding:1px 6px; border-radius:999px;
+      border:0.7px solid rgba(79,70,229,.18);
+    }
+
+    .content{
+      padding:0;
+      background:var(--bg);
+    }
+
+    /* Small floating "Jump" button for mobile */
+    .jump-btn{
+      position:fixed; right:14px; bottom:14px; z-index:50;
+      border-radius:999px; padding:9px 12px;
+      font-weight:900; font-size:.82rem; letter-spacing:.02em;
+      background:var(--bg-card); color:var(--text);
+      border:0.7px solid var(--border);
+      box-shadow:var(--shadow);
+      display:none;
+    }
+    @media(max-width:920px){ .jump-btn{display:block;} }
+
+    /* tiny command palette (super light) */
+    .palette{
+      position:fixed; inset:0; z-index:80; display:none;
+      background:rgba(0,0,0,.25);
+      align-items:center; justify-content:center; padding:20px;
+    }
+    .palette.open{display:flex;}
+    .palette-box{
+      width:min(680px, 96vw);
+      background:var(--bg-card);
+      border:0.7px solid var(--border);
+      border-radius:14px;
+      box-shadow:var(--shell-shadow);
+      overflow:hidden;
+    }
+    .palette-input{
+      width:100%; padding:12px 14px; font-size:1rem; border:none; outline:none;
+      background:transparent; color:var(--text);
+      border-bottom:0.7px solid var(--border);
+    }
+    .palette-list{max-height:52vh; overflow:auto;}
+    .palette-item{
+      padding:10px 14px; cursor:pointer; font-size:.95rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    @media(hover:hover){
+      .palette-item:hover{background:rgba(79,70,229,.06);}
+    }
+
+  
+    .sec-head{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .sec-toggle{
+      cursor:pointer; border:none; outline:none;
+      font-size:.75rem; font-weight:900; letter-spacing:.03em;
+      padding:4px 9px; border-radius:999px;
+      background:var(--bg); color:var(--text);
+      border:0.7px solid var(--border);
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      will-change:transform;
+    }
+    @media(hover:hover){
+      .sec-toggle:hover{ background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.25); transform:translateY(-1px); }
+    }
+    .section.collapsed .sec-body{ display:none; }
+    .section.collapsed{ padding-bottom:6px; }
+
+  
+    /* Sidebar hide/show */
+    .layout.hide-sidebar{ grid-template-columns: 1fr; }
+    .layout.hide-sidebar .sidebar{ display:none; }
+    .side-hide-btn{
+      width:100%; margin-top:6px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 10px; border-radius:10px;
+      font-size:.9rem; color:var(--text);
+      cursor:pointer;
+      border:0.7px solid var(--border);
+      background:var(--bg-card);
+      font-weight:900;
+      transition:background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+    }
+    @media(hover:hover){
+      .side-hide-btn:hover{
+        background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.25);
+      }
+    }
+
+  
+    /* Guard against accidental nested sections */
+    .section .section{
+      margin:12px 0 0;
+      width:100%;
+      max-width:100%;
+      background:var(--bg-card);
+      border:0.7px solid var(--border);
+      border-radius:var(--radius);
+      padding:10px;
+      box-shadow:var(--shadow);
+    }
+
+  
+/* Bottom-right Go-Top button */
+.go-top-btn{
+  position:fixed;
+  right:14px;
+  bottom:20px;
+  z-index:80;
+  border-radius:999px;
+  padding:12px 16px;
+  font-weight:900;
+  font-size:.85rem;
+  letter-spacing:.02em;
+  background:var(--bg-card);
+  color:var(--text);
+  border:0.7px solid var(--border);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:transform var(--speed-fast) var(--ease), opacity var(--speed-fast) var(--ease);
+  opacity:0.85;
+}
+.go-top-btn:active{ transform:scale(.96); }
+@media(hover:hover){
+  .go-top-btn:hover{
+    transform:translateY(-2px);
+    opacity:1;
+  }
+}
+
+
+.go-top-btn.hidden{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+}
+
+</style>
+</head>
+
+<body>
+<div class="shell">
+  <div class="appbar" id="appbar">
+    <div class="traffic" aria-hidden="true">
+      <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+    </div>
+    <div class="app-title">Grammar Breakdown 14</div>
+    <div class="app-actions">
+      <button class="btn ghost" id="paletteBtn" title="Command Palette">⌘K</button>
+      <button class="btn ghost" id="topBtn" title="Scroll to Top">⬆️ Top</button>
+      <button class="btn ghost" id="appSideToggle" title="Toggle Sidebar">🗂 Sidebar</button>
+      <button class="btn" id="themeBtn">🌗 Light / Dark</button>
+      <button class="btn" id="modeBtn">🅰️ Mode A</button>
+      <button class="btn ghost" id="collapseAllBtn">🧹 Close all</button>
+      <button class="btn" id="downloadBtn">💾 Download HTML</button>
+    </div>
+  </div>
+  <header>
+    <div>
+      <h1>14 否定・特殊構文｜Grammar Breakdown</h1>
+      <div class="sub">UltraLite v4 — full question virtualization (windowing) + answer on click</div>
+    </div>
+    </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-group">
+        <div class="side-title">Sections</div>
+        <button class="side-hide-btn" id="sideHideBtn">Hide Sidebar <span class="side-pill">⇤</span></button>
+        <div id="sideList"></div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Mode</div>
+        <div class="side-item" id="sideMode">Toggle Mode <span class="side-pill" id="sideModePill">A</span></div>
+        <div class="side-item" id="sideTheme">Toggle Theme <span class="side-pill" id="sideThemePill">Light</span></div>
+      </div>
+    </aside>
+    <section class="content">
+      <div class="topbar">
+    <div id="modeDesc">Mode A: stacked Hint/Answer accordions.</div>
+    <div>Full virtualization ON.</div>
+  </div>
+
+  <main id="contentRoot">
+
+    <!-- SECTIONS / QUESTIONS (same DOM shells, content unchanged) -->
+    <div class="section" data-sec="1">
+      <h2 class="sec-head">基本問題１｜語句補充 <span class="tag">Negation Basics</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b1-1"><div class="q-label">(1)</div><div class="q-jp">私たちの会社で彼が辞職することを知っている人はほとんどいない．</div><div class="q-en">(　　　　　) people in our office know he is going to resign.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-2"><div class="q-label">(2)</div><div class="q-jp">カズヤはピアノが上手です．</div><div class="q-en">Kazuya is a (　　　　　) (　　　　　).</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-3"><div class="q-label">(3)</div><div class="q-jp">もしディックがその祭りに行かないのなら，僕も行かないよ．</div><div class="q-en">If Dick doesn’t go to the festival, I won’t, (　　　　　).</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-4"><div class="q-label">(4)</div><div class="q-jp">休暇中はよくお休みになれましたか．</div><div class="q-en">Did you have a (　　　　　) (　　　　　) during the holidays?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-5"><div class="q-label">(5)</div><div class="q-jp">その作家はめったに人前に姿を見せない．</div><div class="q-en">The writer (　　　　　) appears in public.</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="2">
+      <h2 class="sec-head">基本問題２｜書きかえ <span class="tag">Structures</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b2-1"><div class="q-label">(1)</div><div class="q-en">Ben is most unlikely to betray us.<br>Ben would be (　　　　　) (　　　　　) person to betray us.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-2"><div class="q-label">(2)</div><div class="q-en">Some people are sure that ghosts exist.<br>Some people are sure of the (　　　　　) (　　　　　) ghosts.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-3"><div class="q-label">(3)</div><div class="q-en">I don’t like any of these pictures.<br>I like (　　　　　) (　　　　　) these pictures.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-4"><div class="q-label">(4)</div><div class="q-en">Why did he change his mind?<br>What (　　　　　) (　　　　　) change his mind?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-5"><div class="q-label">(5)</div><div class="q-en">What you are saying is only an armchair theory.<br>What you are saying is (　　　　　) (　　　　　) an armchair theory.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-6"><div class="q-label">(6)</div><div class="q-en">Though they were tired, they went on working late.<br>(　　　　　) (　　　　　) they were, they went on working late.</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="3">
+      <h2 class="sec-head">基本問題３｜英→日 <span class="tag">Translation</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b3-1"><div class="q-label">(1)</div><div class="q-en">I often go to the library, and so does my brother.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-2"><div class="q-label">(2)</div><div class="q-en">You should not despise people because they are not rich.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-3"><div class="q-label">(3)</div><div class="q-en">When angry, count to ten before you speak.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-4"><div class="q-label">(4)</div><div class="q-en">We have no choice but to wait for him here.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-5"><div class="q-label">(5)</div><div class="q-en">This computer can save us time and energy.</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="4">
+      <h2 class="sec-head">基本問題４｜並べかえ <span class="tag">Word Order</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b4-1"><div class="q-label">(1)</div><div class="q-jp">もっと早くに自己紹介をしなくてすみません．</div><div class="q-raw">I’m [ not, sooner, for, introducing, sorry, myself ].</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-2"><div class="q-label">(2)</div><div class="q-jp">シンデレラが舞踏会ではいていたのはこのガラスの靴だった．</div><div class="q-raw">It [ Cinderella, glass slipper, that, this, was, wore ] at the ball.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-3"><div class="q-label">(3)</div><div class="q-jp">私はもはやその寒さには耐えられない．</div><div class="q-raw">I [ the, any, stand, cold, longer, cannot ].</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-4"><div class="q-label">(4)</div><div class="q-jp">あなたの着ているTシャツを見ると，自分の国を思い出す．</div><div class="q-raw">Your T-shirt [ of, my, me, country, reminds ].</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="5">
+      <h2 class="sec-head">基本問題５｜英作 <span class="tag">Production</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b5-1"><div class="q-label">(1)</div><div class="q-jp">その奨学金のおかげで彼は大学に行くことができた．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-2"><div class="q-label">(2)</div><div class="q-jp">私はこんな美しい景色をこれまで見たことがない．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-3"><div class="q-label">(3)</div><div class="q-jp">彼女の手紙によると，彼女は来週日本に帰ってくるそうだ．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-4"><div class="q-label">(4)</div><div class="q-jp">私の父はタバコを吸わないし，私も吸わない．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-5"><div class="q-label">(5)</div><div class="q-jp">彼らが結婚するといううわさを耳にしましたか．</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="6">
+      <h2 class="sec-head">FOR COMMUNICATION <span class="tag">会話表現</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="fc-1"><div class="q-label">(1)</div><div class="q-en">A: What’s the matter? Are you hurt?<br>B: Yes, I slipped on the floor. I think my left arm is broken.<br>A: Oh! (　　　).<br>a. I hope so / b. I hope not / c. I’m sorry not / d. I’m afraid not</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="fc-2"><div class="q-label">(2)</div><div class="q-en">A: Ken and Mary are getting married next week.<br>B: (　　　)! They got to know each other just a week ago!<br>a. No kidding / b. No offense / c. No problem / d. No sweat</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="7">
+      <h2 class="sec-head">発展問題１｜語句選択 <span class="tag">大学入試</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a1-1"><div class="q-label">(1)</div><div class="q-en">The accident I had yesterday was (　　　) my control.<br>a. in / b. out / c. over / d. beyond</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-2"><div class="q-label">(2)</div><div class="q-en">Susan is not a researcher and she is not a professor, (　　　).<br>a. too / b. either / c. instead / d. also</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-3"><div class="q-label">(3)</div><div class="q-en">The new tax system is (　　　) but perfect.<br>a. anything / b. something / c. nothing / d. everything</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-4"><div class="q-label">(4)</div><div class="q-en">The Internet has (　　　) us to quickly contact even friends who are far away.<br>a. let / b. made / c. suggested / d. enabled</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-5"><div class="q-label">(5)</div><div class="q-en">The food the restaurant offered us was (　　　) from satisfying.<br>a. almost / b. close / c. all / d. far</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-6"><div class="q-label">(6)</div><div class="q-en">How in the (　　　) did you get this rare vase?<br>a. space / b. world / c. air / d. cloud</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="8">
+      <h2 class="sec-head">発展問題２｜並べかえ <span class="tag">Emphasis etc.</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a2-1"><div class="q-label">(1)</div><div class="q-jp">あなたがお兄さんから便りをもらったのはいつですか．</div><div class="q-raw">When [ from, heard, it, that, was, you ] your brother?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-2"><div class="q-label">(2)</div><div class="q-jp">その話を聞くといつも彼のことを思い出します．</div><div class="q-raw">I [ that, never, hear, without, story, remembering ] him.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-3"><div class="q-label">(3)</div><div class="q-jp">離れてみて初めて自分の国のよいところがわかる．</div><div class="q-raw">You [ leave, appreciate, you, don’t, until, your own country ] it.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-4"><div class="q-label">(4)</div><div class="q-jp">少し考えればあなたは自分が間違っていることに気づくだろう．</div><div class="q-raw">[ will make, a little, realize, you, reflection ] you are wrong.</div><div class="mode-slot"></div></div>
+    </div>
+
+    <div class="section" data-sec="9">
+      <h2 class="sec-head">発展問題３｜英作 <span class="tag">Output</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a3-1"><div class="q-label">(1)</div><div class="q-jp">吹雪のために彼女は学校へ行けなかった．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a3-2"><div class="q-label">(2)</div><div class="q-jp">私はその結果にまったく満足していない．</div><div class="mode-slot"></div></div>
+    </div>
+  
+  </main>
+    </section>
+  </div>
+</div>
+
+<button class="jump-btn" id="jumpBtn">Jump</button>
+
+<div class="palette" id="palette">
+  <div class="palette-box">
+    <input class="palette-input" id="paletteInput" placeholder="Type a section or question number… (Esc to close)" />
+    <div class="palette-list" id="paletteList"></div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  "b1-1": { hint:"「ほとんど〜ない」＋数えられる名詞 → few + 複数名詞", answer:"Few people in our office know he is going to resign.", explain:"few は数えられる名詞の前に置き、「(数が)ほとんど～ない」という否定的意味。不可算名詞なら little。", jp:"私たちの会社で彼が辞職することを知っている人はほとんどいない。" },
+  "b1-2": { hint:"「ピアノが上手」＝ good at piano じゃなく「よいピアノの弾き手」", answer:"Kazuya is a good pianist.", explain:"〈形容詞＋名詞(＝動作者)〉の形で表すと自然。", jp:"カズヤはピアノが上手です。" },
+  "b1-3": { hint:"否定文の「〜もまた…ない」→ not 〜 either", answer:"If Dick doesn’t go to the festival, I won’t, either.", explain:"先行する否定文を受けて「～もまた…でない」は not ～ either。", jp:"もしディックがその祭りに行かないなら、僕も行かない。" },
+  "b1-4": { hint:"「よく休む」→ have a good rest", answer:"Did you have a good rest during the holidays?", explain:"「よい休みをとる」と考え 〈動詞＋形容詞＋名詞〉で表す。", jp:"休暇中はよく休めましたか。" },
+  "b1-5": { hint:"「めったに〜ない」→ seldom / rarely", answer:"The writer seldom appears in public.", explain:"seldom/rarely は頻度が非常に低い＝ほぼ否定。", jp:"その作家はめったに人前に姿を見せない。" },
+  "b2-1": { hint:"「最も〜しそうにない人」→ the last person to 〜", answer:"Ben would be the last person to betray us.", explain:"be unlikely to 〜 の自然な言い換え。", jp:"" },
+  "b2-2": { hint:"that ghosts exist を名詞化 → existence of ghosts", answer:"Some people are sure of the existence of ghosts.", explain:"節の内容は名詞構文にできる。", jp:"" },
+  "b2-3": { hint:"not 〜 any of ... = none of ...", answer:"I like none of these pictures.", explain:"none of + 複数名詞 で全体否定。", jp:"" },
+  "b2-4": { hint:"「〜させる」→ make + O + 原形", answer:"What made him change his mind?", explain:"Why? を What made him ... に変える。", jp:"" },
+  "b2-5": { hint:"only = nothing but", answer:"What you are saying is nothing but an armchair theory.", explain:"nothing but ＝「ただ〜にすぎない」。", jp:"" },
+  "b2-6": { hint:"形容詞 + though/as S V", answer:"Tired though they were, they went on working late.", explain:"譲歩の倒置構文。", jp:"" },
+  "b3-1": { hint:"", answer:"私はよく図書館へ行くし，私の兄[弟]もよく行く．", explain:"so + V + S で「Sもまた〜する」。", jp:"" },
+  "b3-2": { hint:"", answer:"裕福ではないからといって人を軽べつすべきではない．", explain:"because 節だけを否定する形。", jp:"" },
+  "b3-3": { hint:"", answer:"腹が立ったら，話す前に10数えなさい．", explain:"When (you are) angry の省略。", jp:"" },
+  "b3-4": { hint:"", answer:"私たちはここで彼を待つしかない．", explain:"have no choice but to do ＝「〜するしかない」。", jp:"" },
+  "b3-5": { hint:"", answer:"このコンピュータのおかげで私たちは時間と労力を省くことができる．", explain:"save O1 O2 の第4文型。", jp:"" },
+  "b4-1": { hint:"be sorry for not -ing", answer:"I’m sorry for not introducing myself sooner.", explain:"否定語 not は否定したい語句の直前。", jp:"" },
+  "b4-2": { hint:"It is ～ that ... の強調構文。", answer:"It was this glass slipper that Cinderella wore at the ball.", explain:"強調したい語句を It was と that の間へ。", jp:"" },
+  "b4-3": { hint:"not ... any longer", answer:"I cannot stand the cold any longer.", explain:"「もはや〜ない」。", jp:"" },
+  "b4-4": { hint:"remind A of B", answer:"Your T-shirt reminds me of my country.", explain:"A remind B of 〜。", jp:"" },
+  "b5-1": { hint:"enable O to do", answer:"The scholarship enabled him to go to university.", explain:"無生物主語で「〜のおかげでOができる」。", jp:"" },
+  "b5-2": { hint:"Never を文頭→倒置", answer:"Never have I seen such a beautiful sight.", explain:"否定副詞前置で助動詞倒置。", jp:"" },
+  "b5-3": { hint:"Her letter says that ...", answer:"Her letter says (that) she will come back to Japan next week.", explain:"say/tell の無生物主語用法。", jp:"" },
+  "b5-4": { hint:"neither + V + S", answer:"My father doesn’t smoke, and neither do I.", explain:"否定内容を受ける倒置。", jp:"" },
+  "b5-5": { hint:"the rumor that ...", answer:"Have you heard the rumor that they will get married?", explain:"同格の that 節。", jp:"" },
+  "fc-1": { hint:"", answer:"b. I hope not.", explain:"望ましくないことに「そうでないといい」。", jp:"" },
+  "fc-2": { hint:"", answer:"a. No kidding.", explain:"驚き「まさか！」。", jp:"" },
+  "a1-1": { hint:"beyond my control", answer:"d. beyond", explain:"「及ばない」＝ beyond。", jp:"" },
+  "a1-2": { hint:"not 〜 either", answer:"b. either", explain:"否定＋「〜もまた」。", jp:"" },
+  "a1-3": { hint:"anything but", answer:"a. anything", explain:"anything but perfect「決して完全でない」。", jp:"" },
+  "a1-4": { hint:"enable O to do", answer:"d. enabled", explain:"enable の過去分詞。", jp:"" },
+  "a1-5": { hint:"far from", answer:"d. far", explain:"far from satisfying。", jp:"" },
+  "a1-6": { hint:"How in the world", answer:"b. world", explain:"疑問強調の慣用句。", jp:"" },
+  "a2-1": { hint:"When was it that ...?", answer:"When was it that you heard from your brother?", explain:"強調構文の疑問形。", jp:"" },
+  "a2-2": { hint:"never 〜 without ...ing", answer:"I never hear that story without remembering him.", explain:"二重否定で「必ず」。", jp:"" },
+  "a2-3": { hint:"not 〜 until ...", answer:"You don’t appreciate your own country until you leave it.", explain:"「…して初めて」。", jp:"" },
+  "a2-4": { hint:"S will make O do", answer:"A little reflection will make you realize you are wrong.", explain:"make O do 構文。", jp:"" },
+  "a3-1": { hint:"prevent O from -ing", answer:"A snow storm prevented her from going to school.", explain:"「〜のために行けない」→ prevent。", jp:"" },
+  "a3-2": { hint:"not 〜 at all", answer:"I am not satisfied with the result at all.", explain:"否定を強める副詞句。", jp:"" }
+};
+
+let mode = "A";
+const modeBtn = document.getElementById("modeBtn");
+const modeDesc = document.getElementById("modeDesc");
+const renderedAnswers = new Set();
+
+/* scheduler */
+const idle = (fn)=>(
+  "requestIdleCallback" in window
+    ? requestIdleCallback(fn, {timeout: 200})
+    : setTimeout(fn, 0)
+);
+
+/* utilities */
+function hintText(d){
+  return d.hint && d.hint.trim()
+    ? d.hint
+    : "この問題はヒントなし。まず自力で解いてみよう。必要なら解答を開いて確認！";
+}
+function buildHintBody(qid){
+  const d = DATA[qid] || {};
+  const noHint = (!d.hint || !d.hint.trim());
+  return `
+    <div class="accordion bubble-wrap hint ${noHint?'warn':''}" data-box="hint">
+      <div class="accordion-inner bubble hint ${noHint?'warn':''}">
+        <div class="label">💡 HINT</div>
+        <div>${hintText(d)}</div>
+      </div>
+    </div>`;
+}
+function buildAnswerBody(qid){
+  const d = DATA[qid] || {};
+  return `
+    <div class="accordion bubble-wrap answer" data-box="answer">
+      <div class="accordion-inner bubble answer">
+        <div class="label">✅ ANSWER</div>
+        <div><b>${d.answer||""}</b></div>
+        ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
+        ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
+      </div>
+    </div>`;
+}
+
+/* render shells */
+function renderModeAShell(slot, qid){
+  const d = DATA[qid] || {};
+  const noHint = (!d.hint || !d.hint.trim());
+  slot.innerHTML = `
+    <div class="toggle-row">
+      <button class="mini hint ${noHint?'warn':''}" data-action="hint">💡 Hint ${noHint?'<span class="hintless-note">no hint</span>':''}</button>
+      <button class="mini answer" data-action="answer">✅ Answer</button>
+    </div>
+    <div class="ex" data-ex></div>
+  `;
+}
+function renderModeBShell(slot, qid){
+  const d = DATA[qid] || {};
+  const noHint = (!d.hint || !d.hint.trim());
+  slot.innerHTML = `
+    <div class="qa-split" data-split>
+      <div class="qa-box hint ${noHint?'warn':''}">
+        <div class="qa-head">
+          <span>💡 HINT ${noHint?'<span class="hintless-note">no hint</span>':''}</span>
+          <button class="mini hint ${noHint?'warn':''}" data-action="hint">Open</button>
+        </div>
+        <div class="accordion qa-acc hint ${noHint?'warn':''}">
+          <div class="accordion-inner qa-body hint ${noHint?'warn':''}" data-hint-body></div>
+        </div>
+      </div>
+      <div class="qa-box answer">
+        <div class="qa-head">
+          <span>✅ ANSWER</span>
+          <button class="mini answer" data-action="answer">Open</button>
+        </div>
+        <div class="accordion qa-acc answer">
+          <div class="accordion-inner qa-body answer" data-answer-body></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* answer injection on click */
+function injectAnswerIfNeeded(item){
+  const qid=item.dataset.qid;
+  if(renderedAnswers.has(qid)) return;
+
+  if(mode==="A"){
+    const ex=item.querySelector("[data-ex]");
+    if(ex){
+      if(!ex.querySelector(".bubble-wrap.hint")) ex.insertAdjacentHTML("beforeend", buildHintBody(qid));
+      ex.insertAdjacentHTML("beforeend", buildAnswerBody(qid));
+    }
+  }else{
+    const hintBody=item.querySelector("[data-hint-body]");
+    const answerBody=item.querySelector("[data-answer-body]");
+    if(hintBody && !hintBody.innerHTML) hintBody.innerHTML = hintText(DATA[qid]||{});
+    if(answerBody){
+      const d=DATA[qid]||{};
+      answerBody.innerHTML = `
+        <div><b>${d.answer||""}</b></div>
+        ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
+        ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
+      `;
+    }
+  }
+  renderedAnswers.add(qid);
+}
+
+/* toggle wiring */
+function setupToggles(item){
+  item.querySelectorAll(".mini[data-action]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const action=btn.dataset.action;
+      const qid=item.dataset.qid;
+
+      if(mode==="A"){
+        const ex=item.querySelector("[data-ex]");
+        if(action==="hint"){
+          if(ex && !ex.querySelector(".bubble-wrap.hint")) ex.insertAdjacentHTML("afterbegin", buildHintBody(qid));
+          const acc=item.querySelector(".bubble-wrap.hint");
+          if(acc) acc.classList.toggle("open");
+        }else{
+          injectAnswerIfNeeded(item);
+          const acc=item.querySelector(".bubble-wrap.answer");
+          if(acc) acc.classList.toggle("open");
+        }
+      }else{
+        if(action==="hint"){
+          const hintBody=item.querySelector("[data-hint-body]");
+          if(hintBody && !hintBody.innerHTML) hintBody.innerHTML = hintText(DATA[qid]||{});
+          const acc=item.querySelector(".qa-box.hint .qa-acc");
+          if(acc) acc.classList.toggle("open");
+          btn.textContent=acc.classList.contains("open")?"Close":"Open";
+        }else{
+          injectAnswerIfNeeded(item);
+          const acc=item.querySelector(".qa-box.answer .qa-acc");
+          if(acc) acc.classList.toggle("open");
+          btn.textContent=acc.classList.contains("open")?"Close":"Open";
+        }
+      }
+    };
+  });
+}
+
+/* ===== FULL QUESTION VIRTUALIZATION (v9) =====
+   Upgrades:
+   1) Pre-measure all heights once (hidden pass) for perfect placeholders.
+   2) Restore only after scroll-idle (no mid-fling work).
+   3) Bigger overscan band to avoid placeholder flashes.
+   4) Freeze heavy paint during active scroll via body.scrolling.
+*/
+const items = [...document.querySelectorAll(".q-item[data-qid]")];
+const heightCache = new Map();
+const liveSet = new Set();
+
+function makePlaceholder(item){
+  if(item.classList.contains("virtual")) return;
+  const qid=item.dataset.qid;
+  const h = Math.max(heightCache.get(qid) || item.getBoundingClientRect().height || 140, 140);
+  heightCache.set(qid, h);
+
+  const rectBefore = item.getBoundingClientRect();
+  const html = item.dataset._html || item.outerHTML;
+  item.dataset._html = html;
+
+  const ph=document.createElement("div");
+  ph.className="q-placeholder virtual";
+  ph.dataset.qid=qid;
+  ph.dataset._html = html;
+  ph.style.height = h+"px";
+  ph.innerHTML = `
+      <div class="sk-chip"></div>
+      <div class="sk-line wide"></div>
+      <div class="sk-line mid"></div>
+      <div class="sk-line short"></div>
+      <div style="font-weight:800;letter-spacing:.03em;margin-top:2px;">
+        Loading question…
+      </div>
+  `;
+  item.replaceWith(ph);
+
+  // compensate scroll if swapped above viewport
+  const rectAfter = ph.getBoundingClientRect();
+  const delta = rectAfter.top - rectBefore.top;
+  if(Math.abs(delta)>1 && rectBefore.top < 0){
+    window.scrollBy(0, delta);
+  }
+  liveSet.delete(qid);
+}
+
+function restoreItem(ph){
+  const qid=ph.dataset.qid;
+  if(!ph.classList.contains("virtual")) return;
+  const rectBefore = ph.getBoundingClientRect();
+
+  const wrap=document.createElement("div");
+  wrap.innerHTML = ph.dataset._html || "";
+  const item=wrap.firstElementChild;
+  if(!item){ return; }
+
+  ph.replaceWith(item);
+
+  const slot=item.querySelector(".mode-slot");
+  if(slot){
+    slot.innerHTML="";
+    if(mode==="A") renderModeAShell(slot,qid);
+    else renderModeBShell(slot,qid);
+  }
+  setupToggles(item);
+
+  const rectAfter = item.getBoundingClientRect();
+  const delta = rectAfter.top - rectBefore.top;
+  if(Math.abs(delta)>1 && rectBefore.top < 0){
+    window.scrollBy(0, delta);
+  }
+  liveSet.add(qid);
+}
+
+/* Scroll-idle gate */
+let scrollingTimer=null;
+let isScrolling=false;
+function onScrollStart(){
+  if(!isScrolling){
+    isScrolling=true;
+    document.body.classList.add("scrolling");
+  }
+  clearTimeout(scrollingTimer);
+  scrollingTimer=setTimeout(()=>{
+    isScrolling=false;
+    document.body.classList.remove("scrolling");
+    // after idle, restore nearby placeholders
+    restoreNearPlaceholders();
+  }, 110);
+}
+window.addEventListener("scroll", onScrollStart, {passive:true});
+
+/* Restore near placeholders after scroll idle */
+function restoreNearPlaceholders(){
+  const bandTop = -innerHeight*1.2;
+  const bandBottom = innerHeight*2.2;
+  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
+    const r=ph.getBoundingClientRect();
+    if(r.bottom>bandTop && r.top<bandBottom){
+      idle(()=>restoreItem(ph));
+    }
+  });
+}
+
+/* IntersectionObserver with bigger overscan */
+function initVirtualization(){
+  // store original html for each item
+  items.forEach(it=>{
+    it.dataset._html = it.outerHTML;
+  });
+
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      const target=e.target;
+      if(target.classList.contains("q-item")){
+        const qid=target.dataset.qid;
+        if(e.isIntersecting){
+          liveSet.add(qid);
+        }else{
+          const rect=target.getBoundingClientRect();
+          const far = rect.top > innerHeight*3.2 || rect.bottom < -innerHeight*3.2;
+          if(far){
+            idle(()=>makePlaceholder(target));
+          }
+        }
+      }else if(target.classList.contains("q-placeholder")){
+        // don't restore mid-scroll; wait for idle
+        if(e.isIntersecting && !isScrolling){
+          idle(()=>restoreItem(target));
+        }
+      }
+    });
+  }, { rootMargin:"1400px 0px", threshold:0.01 });
+
+  const observeAll=()=>{
+    document.querySelectorAll(".q-item[data-qid], .q-placeholder.virtual").forEach(n=>{
+      if(!n._observed){
+        n._observed=true;
+        io.observe(n);
+      }
+      if(n.classList.contains("q-placeholder") && !n.dataset._html){
+        const qid=n.dataset.qid;
+        n.dataset._html = items.find(i=>i.dataset.qid===qid)?.dataset._html || "";
+        n.style.height = (heightCache.get(qid) || 140)+"px";
+      }
+    });
+  };
+  observeAll();
+  setInterval(observeAll, 600);
+
+  // initial pass: virtualize far items right away
+  idle(()=>{
+    document.querySelectorAll(".q-item[data-qid]").forEach(it=>{
+      const rect=it.getBoundingClientRect();
+      const far = rect.top > innerHeight*2.4 || rect.bottom < -innerHeight*2.4;
+      if(far) makePlaceholder(it);
+    });
+  });
+}
+
+/* Pre-measure heights once (hidden pass) */
+function preMeasureHeights(){
+  const measurer=document.createElement("div");
+  measurer.style.cssText="position:absolute;left:-99999px;top:0;width:calc(100% - 20px);visibility:hidden;pointer-events:none;";
+  document.body.appendChild(measurer);
+  items.forEach(it=>{
+    const clone=it.cloneNode(true);
+    clone.style.height="auto";
+    clone.querySelectorAll(".mode-slot").forEach(s=>s.innerHTML=""); // no extra content
+    measurer.appendChild(clone);
+    const h=clone.getBoundingClientRect().height || 140;
+    heightCache.set(clone.dataset.qid, h);
+  });
+  measurer.remove();
+}
+
+/* Mode rebuild for live questions */
+function rebuildAllLive(){
+  renderedAnswers.clear();
+  document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
+    const qid=item.dataset.qid;
+    const slot=item.querySelector(".mode-slot");
+    if(slot){
+      slot.innerHTML="";
+      if(mode==="A") renderModeAShell(slot,qid);
+      else renderModeBShell(slot,qid);
+    }
+    setupToggles(item);
+  });
+  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
+    ph.style.height=Math.max(heightCache.get(ph.dataset.qid)||140,140)+"px";
+  });
+}
+
+modeBtn.addEventListener("click", ()=>{
+  mode = (mode==="A") ? "B" : "A";
+  modeDesc.textContent = mode==="A"
+    ? "Mode A: stacked Hint/Answer accordions."
+    : "Mode B: split Hint/Answer row under each question.";
+  modeBtn.textContent = mode==="A" ? "🅰️ Mode A" : "🅱️ Mode B";
+  rebuildAllLive();
+});
+
+document.getElementById("collapseAllBtn").addEventListener("click", ()=>{
+  document.querySelectorAll(".accordion.open").forEach(a=>a.classList.remove("open"));
+  document.querySelectorAll(".mini[data-action='hint'], .mini[data-action='answer']").forEach(btn=>{
+    if(mode==="B") btn.textContent="Open";
+  });
+});
+
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+});
+
+document.getElementById("downloadBtn").addEventListener("click", ()=>{
+  const fullHtml="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  const blob=new Blob([fullHtml],{type:"text/html"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v9_FULLVIRT_NOTESGRAY_MAXSMOOTH.html";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+});
+
+/* init shells for visible items */
+document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
+  const qid=item.dataset.qid;
+  const slot=item.querySelector(".mode-slot");
+  if(slot){
+    if(mode==="A") renderModeAShell(slot,qid);
+    else renderModeBShell(slot,qid);
+  }
+  setupToggles(item);
+});
+
+
+
+
+/* ===== Flatten sections (hard reset) =====
+   Guarantee every .section is a direct child of #contentRoot.
+   This fixes any accidental nesting that causes shrinking frames.
+*/
+function flattenSections(){
+  const root = document.getElementById("contentRoot");
+  if(!root) return;
+
+  // get all sections in current document order
+  const allSections = [...root.querySelectorAll(".section")];
+
+  allSections.forEach(sec=>{
+    if(sec.parentElement !== root){
+      root.appendChild(sec); // move to top-level, preserving overall order among sections
+    }
+  });
+
+  // remove any empty sec-body after moving kids out
+  [...root.querySelectorAll(".section .sec-body")].forEach(body=>{
+    if(body.querySelector(".section")) {
+      // if any leftover nested sections, move them out too
+      [...body.querySelectorAll(".section")].forEach(n=>root.appendChild(n));
+    }
+  });
+
+  // final sweep: unwrap nested sec-body layers
+  [...root.querySelectorAll(".section .sec-body .sec-body")].forEach(inner=>{
+    const outer = inner.closest(".sec-body");
+    if(outer && outer !== inner){
+      while(inner.firstChild){
+        outer.insertBefore(inner.firstChild, inner);
+      }
+      inner.remove();
+    }
+  });
+}
+flattenSections();
+
+preMeasureHeights();
+
+
+initVirtualization();
+
+/* ===== Mac‑app nav + command palette (lightweight) ===== */
+const sideList = document.getElementById("sideList");
+const jumpBtn = document.getElementById("jumpBtn");
+const palette = document.getElementById("palette");
+const paletteBtn = document.getElementById("paletteBtn");
+const paletteInput = document.getElementById("paletteInput");
+const paletteList = document.getElementById("paletteList");
+const sideMode = document.getElementById("sideMode");
+const sideTheme = document.getElementById("sideTheme");
+const sideModePill = document.getElementById("sideModePill");
+const sideThemePill = document.getElementById("sideThemePill");
+
+// Top button (very top of page)
+const topBtn = document.getElementById("topBtn");
+topBtn.addEventListener("click", ()=>window.scrollTo({top:0, behavior:"smooth"}));
+
+// Sidebar hide/show
+const layoutEl = document.querySelector(".layout");
+const sideHideBtn = document.getElementById("sideHideBtn");
+
+// Appbar + Sidebar hide/show (appbar button is always visible)
+const appSideToggle = document.getElementById("appSideToggle");
+function setSidebarState(hidden){
+  layoutEl.classList.toggle("hide-sidebar", hidden);
+  if(sideHideBtn){
+    sideHideBtn.innerHTML = hidden
+      ? 'Show Sidebar <span class="side-pill">⇥</span>'
+      : 'Hide Sidebar <span class="side-pill">⇤</span>';
+  }
+  appSideToggle.textContent = hidden ? "🗂 Show Sidebar" : "🗂 Hide Sidebar";
+}
+appSideToggle.addEventListener("click", ()=>{
+  const hidden = layoutEl.classList.contains("hide-sidebar");
+  setSidebarState(!hidden);
+});
+// init label
+setSidebarState(layoutEl.classList.contains("hide-sidebar"));
+
+sideHideBtn.addEventListener("click", ()=>{
+  const hidden = layoutEl.classList.contains("hide-sidebar");
+  setSidebarState(!hidden);
+  return;
+  sideHideBtn.innerHTML = hidden
+    ? 'Show Sidebar <span class="side-pill">⇥</span>'
+    : 'Hide Sidebar <span class="side-pill">⇤</span>';
+});
+
+
+// Build section list from DOM headings
+const sectionNodes = [...document.querySelectorAll(".section[data-sec]")];
+const sectionsMeta = sectionNodes.map(sec=>{
+  const id = sec.dataset.sec;
+  const title = sec.querySelector("h2")?.innerText?.trim() || ("Section "+id);
+  return {id, title, node: sec};
+});
+
+function buildSidebar(){
+  sideList.innerHTML = "";
+  sectionsMeta.forEach(s=>{
+    const el = document.createElement("div");
+    el.className = "side-item";
+    el.dataset.sec = s.id;
+    el.innerHTML = `<span>${s.title}</span><span class="side-pill">#${s.id}</span>`;
+    el.onclick = ()=> s.node.scrollIntoView({behavior:"smooth", block:"start"});
+    sideList.appendChild(el);
+  });
+}
+buildSidebar();
+
+// Section hide/show toggles
+function initSectionToggles(){
+  document.querySelectorAll(".section .sec-toggle[data-sec-toggle]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const sec = btn.closest(".section");
+      sec.classList.toggle("collapsed");
+      btn.textContent = sec.classList.contains("collapsed") ? "Show" : "Hide";
+      // move view to the top of this section after toggle
+      sec.scrollIntoView({behavior:"smooth", block:"start"});
+      // after collapsing/expanding, update virtualization height cache
+      const qNodes = sec.querySelectorAll(".q-item[data-qid]");
+      qNodes.forEach(n=>{
+        const qid=n.dataset.qid;
+        if(qid){
+          const h=n.getBoundingClientRect().height||140;
+          heightCache.set(qid,h);
+        }
+      });
+    });
+  });
+}
+initSectionToggles();
+
+
+function updateActiveSection(){
+  let active = sectionsMeta[0];
+  for(const s of sectionsMeta){
+    const r=s.node.getBoundingClientRect();
+    if(r.top <= 120) active=s;
+  }
+  sideList.querySelectorAll(".side-item").forEach(i=>{
+    i.classList.toggle("active", i.dataset.sec===active.id);
+  });
+}
+window.addEventListener("scroll", ()=>{ if(!isScrolling) updateActiveSection(); }, {passive:true});
+updateActiveSection();
+
+// Jump button opens palette on mobile
+jumpBtn.addEventListener("click", ()=> openPalette());
+
+// Sidebar quick toggles
+sideMode.addEventListener("click", ()=>{
+  modeBtn.click();
+});
+sideTheme.addEventListener("click", ()=>{
+  document.getElementById("themeBtn").click();
+});
+
+// Keep pills in sync
+const _origModeClick = modeBtn.onclick;
+modeBtn.addEventListener("click", ()=>{
+  sideModePill.textContent = mode;
+});
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  sideThemePill.textContent = document.body.classList.contains("dark") ? "Dark" : "Light";
+});
+
+// Command palette
+function openPalette(){
+  palette.classList.add("open");
+  paletteInput.value="";
+  renderPalette("");
+  setTimeout(()=>paletteInput.focus(), 0);
+}
+function closePalette(){ palette.classList.remove("open"); }
+
+paletteBtn.addEventListener("click", openPalette);
+window.addEventListener("keydown", (e)=>{
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="k"){
+    e.preventDefault(); openPalette();
+  }
+  if(e.key==="Escape" && palette.classList.contains("open")) closePalette();
+});
+
+palette.addEventListener("click",(e)=>{ if(e.target===palette) closePalette(); });
+
+function renderPalette(q){
+  const query=q.trim().toLowerCase();
+  const results=[];
+  // sections
+  sectionsMeta.forEach(s=>{
+    if(!query || s.title.toLowerCase().includes(query) || ("#"+s.id).includes(query)){
+      results.push({label:s.title, sub:"#"+s.id, action:()=>s.node.scrollIntoView({behavior:"smooth", block:"start"})});
+    }
+  });
+  // question numbers (qid)
+  const qNodes=[...document.querySelectorAll(".q-item[data-qid]")];
+  qNodes.forEach(n=>{
+    const qid=n.dataset.qid;
+    if(query && qid.toLowerCase().includes(query)){
+      results.push({label:qid, sub:"question", action:()=>n.scrollIntoView({behavior:"smooth", block:"center"})});
+    }
+  });
+
+  paletteList.innerHTML="";
+  results.slice(0,50).forEach(r=>{
+    const el=document.createElement("div");
+    el.className="palette-item";
+    el.innerHTML=`<span>${r.label}</span><span class="side-pill">${r.sub}</span>`;
+    el.onclick=()=>{ closePalette(); r.action(); };
+    paletteList.appendChild(el);
+  });
+  if(!results.length){
+    const el=document.createElement("div");
+    el.className="palette-item"; el.textContent="No matches";
+    paletteList.appendChild(el);
+  }
+}
+paletteInput.addEventListener("input", ()=> renderPalette(paletteInput.value));
+
+
+</script>
+<button class="go-top-btn hidden" id="goTopBtn" aria-label="Go to top">⬆️ Top</button>
+
+<script>
+/* ===== v19 Full Pre-Restore After Load (Max Smoothness) ===== */
+window.addEventListener("load", ()=>{
+  // Wait a brief idle period
+  setTimeout(()=>{
+    // Restore all placeholders
+    const placeholders = document.querySelectorAll(".q-placeholder.virtual");
+    placeholders.forEach((ph, i)=>{
+      setTimeout(()=>{
+        // Restore each item
+        const qid = ph.dataset.qid;
+        if(ph.dataset._html){
+          const wrap=document.createElement("div");
+          wrap.innerHTML = ph.dataset._html;
+          const item=wrap.firstElementChild;
+          if(item){
+            ph.replaceWith(item);
+          }
+        }
+      }, i*5); // stagger to avoid blocking
+    });
+
+    // After finishing restore, disable virtualization observers by removing classes/attrs
+    setTimeout(()=>{
+      document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
+        const wrap=document.createElement("div");
+        wrap.innerHTML = ph.dataset._html || "";
+        const item=wrap.firstElementChild;
+        if(item) ph.replaceWith(item);
+      });
+      // Clear any virtualization flags globally
+      window.__disableVirtualization = true;
+    }, placeholders.length*6);
+
+  }, 300); // small delay after load
+});
+</script>
+
+</body>
+
+<script>
+/* ===== Bottom-right Top button (v18) =====
+   Runs after DOM is ready (script placed after body).
+   Auto-hides on scroll down, reappears on scroll up (iOS Safari vibe).
+*/
+(function(){
+  const btn = document.getElementById("goTopBtn");
+  if(!btn) return;
+
+  btn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function update(){
+    const y = window.scrollY;
+    const goingDown = y > lastY + 2;
+    const nearTop = y < 140;
+
+    if(nearTop){
+      btn.classList.add("hidden");
+    }else if(goingDown){
+      btn.classList.add("hidden");
+    }else{
+      btn.classList.remove("hidden");
+    }
+
+    lastY = y;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", ()=>{
+    if(!ticking){
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
+})();
+</script>
+</html>
