@@ -191,66 +191,6 @@
       padding:2px 7px;border-radius:999px;margin-left:6px;
     }
 
-    .q-placeholder{
-      margin-top:10px;
-      border-radius:12px;
-      position:relative;
-      overflow:hidden;
-      background:
-        linear-gradient(180deg, rgba(15,23,42,.015), rgba(15,23,42,.03)),
-        linear-gradient(90deg, transparent, rgba(79,70,229,.06), transparent);
-      border:0.7px solid var(--border);
-      padding:12px;
-      min-height:120px;
-      display:grid;
-      gap:10px;
-      align-content:center;
-      color:var(--text-soft);
-      font-size:.82rem;
-    }
-    .q-placeholder .sk-line{
-      height:10px;border-radius:999px;
-      background:rgba(15,23,42,.06);
-    }
-    .q-placeholder .sk-line.wide{width:88%;}
-    .q-placeholder .sk-line.mid{width:64%;}
-    .q-placeholder .sk-line.short{width:40%;}
-    .q-placeholder .sk-chip{
-      width:90px;height:20px;border-radius:999px;
-      background:rgba(79,70,229,.10);
-      border:1px solid rgba(79,70,229,.18);
-    }
-    /* super-light shimmer */
-    .q-placeholder::after{
-      content:"";
-      position:absolute; inset:0;
-      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%);
-      transform:translateX(-120%);
-      animation: shimmer 1.8s linear infinite;
-      will-change: transform;
-      pointer-events:none;
-      opacity:.6;
-    }
-    body.dark .q-placeholder::after{
-      background:linear-gradient(100deg, transparent 30%, rgba(129,140,248,.22) 50%, transparent 70%);
-      opacity:.8;
-    }
-    @keyframes shimmer{to{transform:translateX(120%);}}
-    @media (prefers-reduced-motion: reduce){
-      .q-placeholder::after{animation:none;}
-    }
-  
-    /* Freeze heavy paint during active scroll (perf win) */
-    body.scrolling .q-item,
-    body.scrolling .qa-box,
-    body.scrolling .bubble,
-    body.scrolling .q-placeholder{
-      box-shadow:none !important;
-      transition:none !important;
-    }
-    body.scrolling .q-placeholder::after{ animation:none !important; opacity:0.2 !important; }
-
-  
     /* ===== Mac-app chrome (static, perf-safe) ===== */
     .appbar{
       position:sticky; top:0; z-index:30;
@@ -485,7 +425,7 @@
   <header>
     <div>
       <h1>14 否定・特殊構文｜Grammar Breakdown</h1>
-      <div class="sub">UltraLite v4 — full question virtualization (windowing) + answer on click</div>
+      <div class="sub">UltraLite v4 — streamlined layout with click-to-reveal answers</div>
     </div>
     </header>
 
@@ -505,7 +445,7 @@
     <section class="content">
       <div class="topbar">
     <div id="modeDesc">Mode A: stacked Hint/Answer accordions.</div>
-    <div>Full virtualization ON.</div>
+    <div>Optimized for smooth scrolling.</div>
   </div>
 
   <main id="contentRoot">
@@ -639,13 +579,6 @@ const modeBtn = document.getElementById("modeBtn");
 const modeDesc = document.getElementById("modeDesc");
 const renderedAnswers = new Set();
 
-/* scheduler */
-const idle = (fn)=>(
-  "requestIdleCallback" in window
-    ? requestIdleCallback(fn, {timeout: 200})
-    : setTimeout(fn, 0)
-);
-
 /* utilities */
 function hintText(d){
   return d.hint && d.hint.trim()
@@ -778,197 +711,17 @@ function setupToggles(item){
   });
 }
 
-/* ===== FULL QUESTION VIRTUALIZATION (v9) =====
-   Upgrades:
-   1) Pre-measure all heights once (hidden pass) for perfect placeholders.
-   2) Restore only after scroll-idle (no mid-fling work).
-   3) Bigger overscan band to avoid placeholder flashes.
-   4) Freeze heavy paint during active scroll via body.scrolling.
-*/
-const items = [...document.querySelectorAll(".q-item[data-qid]")];
-const heightCache = new Map();
-const liveSet = new Set();
-
-function makePlaceholder(item){
-  if(item.classList.contains("virtual")) return;
-  const qid=item.dataset.qid;
-  const h = Math.max(heightCache.get(qid) || item.getBoundingClientRect().height || 140, 140);
-  heightCache.set(qid, h);
-
-  const rectBefore = item.getBoundingClientRect();
-  const html = item.dataset._html || item.outerHTML;
-  item.dataset._html = html;
-
-  const ph=document.createElement("div");
-  ph.className="q-placeholder virtual";
-  ph.dataset.qid=qid;
-  ph.dataset._html = html;
-  ph.style.height = h+"px";
-  ph.innerHTML = `
-      <div class="sk-chip"></div>
-      <div class="sk-line wide"></div>
-      <div class="sk-line mid"></div>
-      <div class="sk-line short"></div>
-      <div style="font-weight:800;letter-spacing:.03em;margin-top:2px;">
-        Loading question…
-      </div>
-  `;
-  item.replaceWith(ph);
-
-  // compensate scroll if swapped above viewport
-  const rectAfter = ph.getBoundingClientRect();
-  const delta = rectAfter.top - rectBefore.top;
-  if(Math.abs(delta)>1 && rectBefore.top < 0){
-    window.scrollBy(0, delta);
-  }
-  liveSet.delete(qid);
-}
-
-function restoreItem(ph){
-  const qid=ph.dataset.qid;
-  if(!ph.classList.contains("virtual")) return;
-  const rectBefore = ph.getBoundingClientRect();
-
-  const wrap=document.createElement("div");
-  wrap.innerHTML = ph.dataset._html || "";
-  const item=wrap.firstElementChild;
-  if(!item){ return; }
-
-  ph.replaceWith(item);
-
-  const slot=item.querySelector(".mode-slot");
-  if(slot){
-    slot.innerHTML="";
-    if(mode==="A") renderModeAShell(slot,qid);
-    else renderModeBShell(slot,qid);
-  }
-  setupToggles(item);
-
-  const rectAfter = item.getBoundingClientRect();
-  const delta = rectAfter.top - rectBefore.top;
-  if(Math.abs(delta)>1 && rectBefore.top < 0){
-    window.scrollBy(0, delta);
-  }
-  liveSet.add(qid);
-}
-
-/* Scroll-idle gate */
-let scrollingTimer=null;
-let isScrolling=false;
-function onScrollStart(){
-  if(!isScrolling){
-    isScrolling=true;
-    document.body.classList.add("scrolling");
-  }
-  clearTimeout(scrollingTimer);
-  scrollingTimer=setTimeout(()=>{
-    isScrolling=false;
-    document.body.classList.remove("scrolling");
-    // after idle, restore nearby placeholders
-    restoreNearPlaceholders();
-  }, 110);
-}
-window.addEventListener("scroll", onScrollStart, {passive:true});
-
-/* Restore near placeholders after scroll idle */
-function restoreNearPlaceholders(){
-  const bandTop = -innerHeight*1.2;
-  const bandBottom = innerHeight*2.2;
-  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
-    const r=ph.getBoundingClientRect();
-    if(r.bottom>bandTop && r.top<bandBottom){
-      idle(()=>restoreItem(ph));
-    }
-  });
-}
-
-/* IntersectionObserver with bigger overscan */
-function initVirtualization(){
-  // store original html for each item
-  items.forEach(it=>{
-    it.dataset._html = it.outerHTML;
-  });
-
-  const io = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      const target=e.target;
-      if(target.classList.contains("q-item")){
-        const qid=target.dataset.qid;
-        if(e.isIntersecting){
-          liveSet.add(qid);
-        }else{
-          const rect=target.getBoundingClientRect();
-          const far = rect.top > innerHeight*3.2 || rect.bottom < -innerHeight*3.2;
-          if(far){
-            idle(()=>makePlaceholder(target));
-          }
-        }
-      }else if(target.classList.contains("q-placeholder")){
-        // don't restore mid-scroll; wait for idle
-        if(e.isIntersecting && !isScrolling){
-          idle(()=>restoreItem(target));
-        }
-      }
-    });
-  }, { rootMargin:"1400px 0px", threshold:0.01 });
-
-  const observeAll=()=>{
-    document.querySelectorAll(".q-item[data-qid], .q-placeholder.virtual").forEach(n=>{
-      if(!n._observed){
-        n._observed=true;
-        io.observe(n);
-      }
-      if(n.classList.contains("q-placeholder") && !n.dataset._html){
-        const qid=n.dataset.qid;
-        n.dataset._html = items.find(i=>i.dataset.qid===qid)?.dataset._html || "";
-        n.style.height = (heightCache.get(qid) || 140)+"px";
-      }
-    });
-  };
-  observeAll();
-  setInterval(observeAll, 600);
-
-  // initial pass: virtualize far items right away
-  idle(()=>{
-    document.querySelectorAll(".q-item[data-qid]").forEach(it=>{
-      const rect=it.getBoundingClientRect();
-      const far = rect.top > innerHeight*2.4 || rect.bottom < -innerHeight*2.4;
-      if(far) makePlaceholder(it);
-    });
-  });
-}
-
-/* Pre-measure heights once (hidden pass) */
-function preMeasureHeights(){
-  const measurer=document.createElement("div");
-  measurer.style.cssText="position:absolute;left:-99999px;top:0;width:calc(100% - 20px);visibility:hidden;pointer-events:none;";
-  document.body.appendChild(measurer);
-  items.forEach(it=>{
-    const clone=it.cloneNode(true);
-    clone.style.height="auto";
-    clone.querySelectorAll(".mode-slot").forEach(s=>s.innerHTML=""); // no extra content
-    measurer.appendChild(clone);
-    const h=clone.getBoundingClientRect().height || 140;
-    heightCache.set(clone.dataset.qid, h);
-  });
-  measurer.remove();
-}
-
-/* Mode rebuild for live questions */
+/* Mode rebuild for all questions */
 function rebuildAllLive(){
   renderedAnswers.clear();
   document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
     const qid=item.dataset.qid;
     const slot=item.querySelector(".mode-slot");
-    if(slot){
-      slot.innerHTML="";
-      if(mode==="A") renderModeAShell(slot,qid);
-      else renderModeBShell(slot,qid);
-    }
+    if(!slot) return;
+    slot.innerHTML="";
+    if(mode==="A") renderModeAShell(slot,qid);
+    else renderModeBShell(slot,qid);
     setupToggles(item);
-  });
-  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
-    ph.style.height=Math.max(heightCache.get(ph.dataset.qid)||140,140)+"px";
   });
 }
 
@@ -997,7 +750,7 @@ document.getElementById("downloadBtn").addEventListener("click", ()=>{
   const blob=new Blob([fullHtml],{type:"text/html"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
-  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v9_FULLVIRT_NOTESGRAY_MAXSMOOTH.html";
+  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v9_NOTESGRAY_SMOOTH.html";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 });
 
@@ -1052,12 +805,6 @@ function flattenSections(){
   });
 }
 flattenSections();
-
-preMeasureHeights();
-
-
-initVirtualization();
-
 /* ===== Mac‑app nav + command palette (lightweight) ===== */
 const sideList = document.getElementById("sideList");
 const jumpBtn = document.getElementById("jumpBtn");
@@ -1137,15 +884,6 @@ function initSectionToggles(){
       btn.textContent = sec.classList.contains("collapsed") ? "Show" : "Hide";
       // move view to the top of this section after toggle
       sec.scrollIntoView({behavior:"smooth", block:"start"});
-      // after collapsing/expanding, update virtualization height cache
-      const qNodes = sec.querySelectorAll(".q-item[data-qid]");
-      qNodes.forEach(n=>{
-        const qid=n.dataset.qid;
-        if(qid){
-          const h=n.getBoundingClientRect().height||140;
-          heightCache.set(qid,h);
-        }
-      });
     });
   });
 }
@@ -1162,7 +900,7 @@ function updateActiveSection(){
     i.classList.toggle("active", i.dataset.sec===active.id);
   });
 }
-window.addEventListener("scroll", ()=>{ if(!isScrolling) updateActiveSection(); }, {passive:true});
+window.addEventListener("scroll", ()=>{ updateActiveSection(); }, {passive:true});
 updateActiveSection();
 
 // Jump button opens palette on mobile
@@ -1241,44 +979,6 @@ paletteInput.addEventListener("input", ()=> renderPalette(paletteInput.value));
 
 </script>
 <button class="go-top-btn hidden" id="goTopBtn" aria-label="Go to top">⬆️ Top</button>
-
-<script>
-/* ===== v19 Full Pre-Restore After Load (Max Smoothness) ===== */
-window.addEventListener("load", ()=>{
-  // Wait a brief idle period
-  setTimeout(()=>{
-    // Restore all placeholders
-    const placeholders = document.querySelectorAll(".q-placeholder.virtual");
-    placeholders.forEach((ph, i)=>{
-      setTimeout(()=>{
-        // Restore each item
-        const qid = ph.dataset.qid;
-        if(ph.dataset._html){
-          const wrap=document.createElement("div");
-          wrap.innerHTML = ph.dataset._html;
-          const item=wrap.firstElementChild;
-          if(item){
-            ph.replaceWith(item);
-          }
-        }
-      }, i*5); // stagger to avoid blocking
-    });
-
-    // After finishing restore, disable virtualization observers by removing classes/attrs
-    setTimeout(()=>{
-      document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
-        const wrap=document.createElement("div");
-        wrap.innerHTML = ph.dataset._html || "";
-        const item=wrap.firstElementChild;
-        if(item) ph.replaceWith(item);
-      });
-      // Clear any virtualization flags globally
-      window.__disableVirtualization = true;
-    }, placeholders.length*6);
-
-  }, 300); // small delay after load
-});
-</script>
 
 </body>
 
