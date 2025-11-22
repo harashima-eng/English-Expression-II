@@ -250,25 +250,379 @@
     }
     body.scrolling .q-placeholder::after{ animation:none !important; opacity:0.2 !important; }
 
-  </style>
+  
+    /* ===== Mac-app chrome (static, perf-safe) ===== */
+    .appbar{
+      position:sticky; top:0; z-index:30;
+      display:flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      background:rgba(255,255,255,.9);
+      backdrop-filter:saturate(1.2) blur(8px);
+      border-bottom:0.7px solid var(--border);
+    }
+    body.dark .appbar{
+      background:rgba(12,16,26,.92);
+      backdrop-filter:saturate(1.15) blur(8px);
+    }
+    .traffic{
+      display:flex; gap:6px; padding:4px 6px; border-radius:999px;
+      background:rgba(0,0,0,.04);
+      border:0.7px solid var(--border);
+    }
+    body.dark .traffic{ background:rgba(255,255,255,.04); }
+    .dot{width:12px;height:12px;border-radius:50%;}
+    .dot.red{background:#ff5f57;}
+    .dot.yellow{background:#febc2e;}
+    .dot.green{background:#28c840;}
+    .app-title{
+      font-weight:900; font-size:.9rem; letter-spacing:.02em;
+      color:var(--text);
+    }
+    .app-actions{margin-left:auto; display:flex; gap:6px; flex-wrap:wrap;}
+
+    .layout{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 0px);
+    }
+    @media(max-width:920px){
+      .layout{ grid-template-columns: 1fr; }
+      .sidebar{ position:static; border-right:none; border-bottom:0.7px solid var(--border); }
+    }
+
+    .sidebar{
+      position:sticky; top:52px; height:calc(100vh - 52px);
+      overflow:auto; padding:10px;
+      background:var(--bg);
+      border-right:0.7px solid var(--border);
+      -webkit-overflow-scrolling: touch;
+    }
+    .side-group{margin-bottom:10px;}
+    .side-title{
+      font-size:.72rem; font-weight:900; color:var(--text-soft);
+      text-transform:uppercase; letter-spacing:.12em;
+      padding:6px 8px;
+    }
+    .side-item{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 10px; border-radius:10px;
+      font-size:.9rem; color:var(--text);
+      cursor:pointer;
+      border:0.7px solid transparent;
+      transition:background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+    }
+    @media(hover:hover){
+      .side-item:hover{
+        background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.18);
+      }
+    }
+    .side-item.active{
+      background:rgba(79,70,229,.10);
+      border-color:rgba(79,70,229,.25);
+      font-weight:900;
+    }
+    .side-pill{
+      font-size:.7rem; font-weight:900; color:var(--accent);
+      background:rgba(79,70,229,.08);
+      padding:1px 6px; border-radius:999px;
+      border:0.7px solid rgba(79,70,229,.18);
+    }
+
+    .content{
+      padding:0;
+      background:var(--bg);
+    }
+
+    /* Small floating "Jump" button for mobile */
+    .jump-btn{
+      position:fixed; right:14px; bottom:14px; z-index:50;
+      border-radius:999px; padding:9px 12px;
+      font-weight:900; font-size:.82rem; letter-spacing:.02em;
+      background:var(--bg-card); color:var(--text);
+      border:0.7px solid var(--border);
+      box-shadow:var(--shadow);
+      display:none;
+    }
+    @media(max-width:920px){ .jump-btn{display:block;} }
+
+    /* tiny command palette (super light) */
+    .palette{
+      position:fixed; inset:0; z-index:80; display:none;
+      background:rgba(0,0,0,.25);
+      align-items:center; justify-content:center; padding:20px;
+    }
+    .palette.open{display:flex;}
+    .palette-box{
+      width:min(680px, 96vw);
+      background:var(--bg-card);
+      border:0.7px solid var(--border);
+      border-radius:14px;
+      box-shadow:var(--shell-shadow);
+      overflow:hidden;
+    }
+    .palette-input{
+      width:100%; padding:12px 14px; font-size:1rem; border:none; outline:none;
+      background:transparent; color:var(--text);
+      border-bottom:0.7px solid var(--border);
+    }
+    .palette-list{max-height:52vh; overflow:auto;}
+    .palette-item{
+      padding:10px 14px; cursor:pointer; font-size:.95rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    @media(hover:hover){
+      .palette-item:hover{background:rgba(79,70,229,.06);}
+    }
+
+  
+    .sec-head{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .sec-toggle{
+      cursor:pointer; border:none; outline:none;
+      font-size:.75rem; font-weight:900; letter-spacing:.03em;
+      padding:4px 9px; border-radius:999px;
+      background:var(--bg); color:var(--text);
+      border:0.7px solid var(--border);
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      will-change:transform;
+    }
+    @media(hover:hover){
+      .sec-toggle:hover{ background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.25); transform:translateY(-1px); }
+    }
+    .section.collapsed .sec-body{ display:none; }
+    .section.collapsed{ padding-bottom:6px; }
+
+  
+    /* Sidebar hide/show */
+    .layout.hide-sidebar{ grid-template-columns: 1fr; }
+    .layout.hide-sidebar .sidebar{ display:none; }
+    .side-hide-btn{
+      width:100%; margin-top:6px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:7px 10px; border-radius:10px;
+      font-size:.9rem; color:var(--text);
+      cursor:pointer;
+      border:0.7px solid var(--border);
+      background:var(--bg-card);
+      font-weight:900;
+      transition:background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+    }
+    @media(hover:hover){
+      .side-hide-btn:hover{
+        background:rgba(79,70,229,.06); border-color:rgba(79,70,229,.25);
+      }
+    }
+
+  
+    /* Guard against accidental nested sections */
+    .section .section{
+      margin:12px 0 0;
+      width:100%;
+      max-width:100%;
+      background:var(--bg-card);
+      border:0.7px solid var(--border);
+      border-radius:var(--radius);
+      padding:10px;
+      box-shadow:var(--shadow);
+    }
+
+  
+/* Bottom-right Go-Top button */
+.go-top-btn{
+  position:fixed;
+  right:14px;
+  bottom:20px;
+  z-index:80;
+  border-radius:999px;
+  padding:12px 16px;
+  font-weight:900;
+  font-size:.85rem;
+  letter-spacing:.02em;
+  background:var(--bg-card);
+  color:var(--text);
+  border:0.7px solid var(--border);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:transform var(--speed-fast) var(--ease), opacity var(--speed-fast) var(--ease);
+  opacity:0.85;
+}
+.go-top-btn:active{ transform:scale(.96); }
+@media(hover:hover){
+  .go-top-btn:hover{
+    transform:translateY(-2px);
+    opacity:1;
+  }
+}
+
+
+.go-top-btn.hidden{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(8px);
+}
+
+
+  100%{opacity:0;}
+}
+
+
+/* ===== Smooth Mode Pre-restore UI (v21 Apple-ish) ===== */
+.smooth-overlay{
+  position:fixed; inset:0; z-index:120;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(242,243,245,.92);
+  backdrop-filter:saturate(1.15) blur(14px);
+  transition:opacity .35s var(--ease), visibility .35s var(--ease);
+}
+body.dark .smooth-overlay{
+  background:rgba(6,8,12,.94);
+  backdrop-filter:saturate(1.1) blur(14px);
+}
+.smooth-overlay.hidden{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+.smooth-card{
+  width:min(540px, 94vw);
+  background:color-mix(in srgb, var(--bg-card) 92%, transparent);
+  border:0.7px solid var(--border);
+  border-radius:22px;
+  box-shadow:var(--shell-shadow);
+  padding:18px 18px 16px;
+  display:grid; gap:12px;
+  transform:translateY(6px) scale(.985);
+  animation:smoothPop .55s var(--ease) forwards;
+}
+@keyframes smoothPop{to{transform:translateY(0) scale(1);}}
+.smooth-badge{
+  justify-self:start;
+  font-size:.72rem; font-weight:900; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-soft);
+  background:rgba(15,23,42,.05);
+  border:0.7px solid var(--border);
+  padding:3px 8px; border-radius:999px;
+}
+body.dark .smooth-badge{background:rgba(255,255,255,.06);}
+.smooth-banner{
+  font-weight:900; letter-spacing:.02em;
+  font-size:1.05rem; display:flex; align-items:center; gap:8px;
+}
+.smooth-sub{
+  font-size:.92rem; color:var(--text-soft); line-height:1.6;
+}
+.spinner{
+  width:38px; height:38px; border-radius:50%;
+  border:3px solid rgba(79,70,229,.16);
+  border-top-color:var(--accent);
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg);} }
+
+.progress-wrap{
+  height:10px; background:rgba(15,23,42,.06);
+  border-radius:999px; overflow:hidden; border:0.7px solid var(--border);
+}
+body.dark .progress-wrap{ background:rgba(255,255,255,.06); }
+.progress-bar{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--accent), rgba(79,70,229,.35));
+  transition:width .12s linear;
+  border-radius:999px;
+}
+.smooth-meta{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  font-size:.9rem; font-weight:900;
+}
+.smooth-tip{
+  font-weight:700; color:var(--text-soft); font-size:.85rem;
+}
+
+/* completion fade */
+.fade-complete{
+  position:fixed; inset:0; z-index:130;
+  background:var(--bg);
+  opacity:0; pointer-events:none;
+  animation:completeFade .7s var(--ease) forwards;
+}
+@keyframes completeFade{0%{opacity:1;}100%{opacity:0;}}
+@media (prefers-reduced-motion: reduce){
+  .smooth-card{animation:none; transform:none;}
+  .spinner{animation:none;}
+  .fade-complete{animation:none;}
+}
+
+</style>
 </head>
 
 <body>
-<div class="shell">
-  <header>
-    <div>
-      <h1>14 否定・特殊構文｜Grammar Breakdown</h1>
-      <div class="sub">UltraLite v4 — full question virtualization (windowing) + answer on click</div>
+
+<div class="smooth-overlay" id="smoothOverlay" role="status" aria-live="polite">
+  <div class="smooth-card">
+    <div class="smooth-badge">Smooth Mode</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="spinner" aria-hidden="true"></div>
+      <div>
+        <div class="smooth-banner">Preparing Smooth Mode…</div>
+        <div class="smooth-sub">Loading everything first so scrolling stays buttery after.</div>
+      </div>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+    <div class="progress-wrap">
+      <div class="progress-bar" id="smoothProgress"></div>
+    </div>
+    <div class="smooth-meta">
+      <span id="smoothPct">0%</span>
+      <span class="smooth-tip">You can start reading right away.</span>
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="progress-wrap" aria-label="Loading progress">
+      <div class="progress-bar" id="smoothProgress"></div>
+    </div>
+    <div class="smooth-sub" id="smoothPct">0%</div>
+  </div>
+</div>
+
+<div class="shell">
+  <div class="appbar" id="appbar">
+    <div class="traffic" aria-hidden="true">
+      <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+    </div>
+    <div class="app-title">Grammar Breakdown 14</div>
+    <div class="app-actions">
+      <button class="btn ghost" id="paletteBtn" title="Command Palette">⌘K</button>
+      <button class="btn ghost" id="topBtn" title="Scroll to Top">⬆️ Top</button>
+      <button class="btn ghost" id="appSideToggle" title="Toggle Sidebar">🗂 Sidebar</button>
       <button class="btn" id="themeBtn">🌗 Light / Dark</button>
       <button class="btn" id="modeBtn">🅰️ Mode A</button>
       <button class="btn ghost" id="collapseAllBtn">🧹 Close all</button>
       <button class="btn" id="downloadBtn">💾 Download HTML</button>
     </div>
-  </header>
+  </div>
+  <header>
+    <div>
+      <h1>14 否定・特殊構文｜Grammar Breakdown</h1>
+      <div class="sub">UltraLite v4 — full question virtualization (windowing) + answer on click</div>
+    </div>
+    </header>
 
-  <div class="topbar">
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-group">
+        <div class="side-title">Sections</div>
+        <button class="side-hide-btn" id="sideHideBtn">Hide Sidebar <span class="side-pill">⇤</span></button>
+        <div id="sideList"></div>
+      </div>
+      <div class="side-group">
+        <div class="side-title">Mode</div>
+        <div class="side-item" id="sideMode">Toggle Mode <span class="side-pill" id="sideModePill">A</span></div>
+        <div class="side-item" id="sideTheme">Toggle Theme <span class="side-pill" id="sideThemePill">Light</span></div>
+      </div>
+    </aside>
+    <section class="content">
+      <div class="topbar">
     <div id="modeDesc">Mode A: stacked Hint/Answer accordions.</div>
     <div>Full virtualization ON.</div>
   </div>
@@ -277,8 +631,7 @@
 
     <!-- SECTIONS / QUESTIONS (same DOM shells, content unchanged) -->
     <div class="section" data-sec="1">
-      <h2>基本問題１｜語句補充 <span class="tag">Negation Basics</span></h2>
-      <div class="q-item" data-qid="b1-1"><div class="q-label">(1)</div><div class="q-jp">私たちの会社で彼が辞職することを知っている人はほとんどいない．</div><div class="q-en">(　　　　　) people in our office know he is going to resign.</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">基本問題１｜語句補充 <span class="tag">Negation Basics</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b1-1"><div class="q-label">(1)</div><div class="q-jp">私たちの会社で彼が辞職することを知っている人はほとんどいない．</div><div class="q-en">(　　　　　) people in our office know he is going to resign.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b1-2"><div class="q-label">(2)</div><div class="q-jp">カズヤはピアノが上手です．</div><div class="q-en">Kazuya is a (　　　　　) (　　　　　).</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b1-3"><div class="q-label">(3)</div><div class="q-jp">もしディックがその祭りに行かないのなら，僕も行かないよ．</div><div class="q-en">If Dick doesn’t go to the festival, I won’t, (　　　　　).</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b1-4"><div class="q-label">(4)</div><div class="q-jp">休暇中はよくお休みになれましたか．</div><div class="q-en">Did you have a (　　　　　) (　　　　　) during the holidays?</div><div class="mode-slot"></div></div>
@@ -286,8 +639,7 @@
     </div>
 
     <div class="section" data-sec="2">
-      <h2>基本問題２｜書きかえ <span class="tag">Structures</span></h2>
-      <div class="q-item" data-qid="b2-1"><div class="q-label">(1)</div><div class="q-en">Ben is most unlikely to betray us.<br>Ben would be (　　　　　) (　　　　　) person to betray us.</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">基本問題２｜書きかえ <span class="tag">Structures</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b2-1"><div class="q-label">(1)</div><div class="q-en">Ben is most unlikely to betray us.<br>Ben would be (　　　　　) (　　　　　) person to betray us.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b2-2"><div class="q-label">(2)</div><div class="q-en">Some people are sure that ghosts exist.<br>Some people are sure of the (　　　　　) (　　　　　) ghosts.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b2-3"><div class="q-label">(3)</div><div class="q-en">I don’t like any of these pictures.<br>I like (　　　　　) (　　　　　) these pictures.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b2-4"><div class="q-label">(4)</div><div class="q-en">Why did he change his mind?<br>What (　　　　　) (　　　　　) change his mind?</div><div class="mode-slot"></div></div>
@@ -296,8 +648,7 @@
     </div>
 
     <div class="section" data-sec="3">
-      <h2>基本問題３｜英→日 <span class="tag">Translation</span></h2>
-      <div class="q-item" data-qid="b3-1"><div class="q-label">(1)</div><div class="q-en">I often go to the library, and so does my brother.</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">基本問題３｜英→日 <span class="tag">Translation</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b3-1"><div class="q-label">(1)</div><div class="q-en">I often go to the library, and so does my brother.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b3-2"><div class="q-label">(2)</div><div class="q-en">You should not despise people because they are not rich.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b3-3"><div class="q-label">(3)</div><div class="q-en">When angry, count to ten before you speak.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b3-4"><div class="q-label">(4)</div><div class="q-en">We have no choice but to wait for him here.</div><div class="mode-slot"></div></div>
@@ -305,16 +656,14 @@
     </div>
 
     <div class="section" data-sec="4">
-      <h2>基本問題４｜並べかえ <span class="tag">Word Order</span></h2>
-      <div class="q-item" data-qid="b4-1"><div class="q-label">(1)</div><div class="q-jp">もっと早くに自己紹介をしなくてすみません．</div><div class="q-raw">I’m [ not, sooner, for, introducing, sorry, myself ].</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">基本問題４｜並べかえ <span class="tag">Word Order</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b4-1"><div class="q-label">(1)</div><div class="q-jp">もっと早くに自己紹介をしなくてすみません．</div><div class="q-raw">I’m [ not, sooner, for, introducing, sorry, myself ].</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b4-2"><div class="q-label">(2)</div><div class="q-jp">シンデレラが舞踏会ではいていたのはこのガラスの靴だった．</div><div class="q-raw">It [ Cinderella, glass slipper, that, this, was, wore ] at the ball.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b4-3"><div class="q-label">(3)</div><div class="q-jp">私はもはやその寒さには耐えられない．</div><div class="q-raw">I [ the, any, stand, cold, longer, cannot ].</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b4-4"><div class="q-label">(4)</div><div class="q-jp">あなたの着ているTシャツを見ると，自分の国を思い出す．</div><div class="q-raw">Your T-shirt [ of, my, me, country, reminds ].</div><div class="mode-slot"></div></div>
     </div>
 
     <div class="section" data-sec="5">
-      <h2>基本問題５｜英作 <span class="tag">Production</span></h2>
-      <div class="q-item" data-qid="b5-1"><div class="q-label">(1)</div><div class="q-jp">その奨学金のおかげで彼は大学に行くことができた．</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">基本問題５｜英作 <span class="tag">Production</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="b5-1"><div class="q-label">(1)</div><div class="q-jp">その奨学金のおかげで彼は大学に行くことができた．</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b5-2"><div class="q-label">(2)</div><div class="q-jp">私はこんな美しい景色をこれまで見たことがない．</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b5-3"><div class="q-label">(3)</div><div class="q-jp">彼女の手紙によると，彼女は来週日本に帰ってくるそうだ．</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="b5-4"><div class="q-label">(4)</div><div class="q-jp">私の父はタバコを吸わないし，私も吸わない．</div><div class="mode-slot"></div></div>
@@ -322,14 +671,12 @@
     </div>
 
     <div class="section" data-sec="6">
-      <h2>FOR COMMUNICATION <span class="tag">会話表現</span></h2>
-      <div class="q-item" data-qid="fc-1"><div class="q-label">(1)</div><div class="q-en">A: What’s the matter? Are you hurt?<br>B: Yes, I slipped on the floor. I think my left arm is broken.<br>A: Oh! (　　　).<br>a. I hope so / b. I hope not / c. I’m sorry not / d. I’m afraid not</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">FOR COMMUNICATION <span class="tag">会話表現</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="fc-1"><div class="q-label">(1)</div><div class="q-en">A: What’s the matter? Are you hurt?<br>B: Yes, I slipped on the floor. I think my left arm is broken.<br>A: Oh! (　　　).<br>a. I hope so / b. I hope not / c. I’m sorry not / d. I’m afraid not</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="fc-2"><div class="q-label">(2)</div><div class="q-en">A: Ken and Mary are getting married next week.<br>B: (　　　)! They got to know each other just a week ago!<br>a. No kidding / b. No offense / c. No problem / d. No sweat</div><div class="mode-slot"></div></div>
     </div>
 
     <div class="section" data-sec="7">
-      <h2>発展問題１｜語句選択 <span class="tag">大学入試</span></h2>
-      <div class="q-item" data-qid="a1-1"><div class="q-label">(1)</div><div class="q-en">The accident I had yesterday was (　　　) my control.<br>a. in / b. out / c. over / d. beyond</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">発展問題１｜語句選択 <span class="tag">大学入試</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a1-1"><div class="q-label">(1)</div><div class="q-en">The accident I had yesterday was (　　　) my control.<br>a. in / b. out / c. over / d. beyond</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a1-2"><div class="q-label">(2)</div><div class="q-en">Susan is not a researcher and she is not a professor, (　　　).<br>a. too / b. either / c. instead / d. also</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a1-3"><div class="q-label">(3)</div><div class="q-en">The new tax system is (　　　) but perfect.<br>a. anything / b. something / c. nothing / d. everything</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a1-4"><div class="q-label">(4)</div><div class="q-en">The Internet has (　　　) us to quickly contact even friends who are far away.<br>a. let / b. made / c. suggested / d. enabled</div><div class="mode-slot"></div></div>
@@ -338,20 +685,29 @@
     </div>
 
     <div class="section" data-sec="8">
-      <h2>発展問題２｜並べかえ <span class="tag">Emphasis etc.</span></h2>
-      <div class="q-item" data-qid="a2-1"><div class="q-label">(1)</div><div class="q-jp">あなたがお兄さんから便りをもらったのはいつですか．</div><div class="q-raw">When [ from, heard, it, that, was, you ] your brother?</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">発展問題２｜並べかえ <span class="tag">Emphasis etc.</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a2-1"><div class="q-label">(1)</div><div class="q-jp">あなたがお兄さんから便りをもらったのはいつですか．</div><div class="q-raw">When [ from, heard, it, that, was, you ] your brother?</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a2-2"><div class="q-label">(2)</div><div class="q-jp">その話を聞くといつも彼のことを思い出します．</div><div class="q-raw">I [ that, never, hear, without, story, remembering ] him.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a2-3"><div class="q-label">(3)</div><div class="q-jp">離れてみて初めて自分の国のよいところがわかる．</div><div class="q-raw">You [ leave, appreciate, you, don’t, until, your own country ] it.</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a2-4"><div class="q-label">(4)</div><div class="q-jp">少し考えればあなたは自分が間違っていることに気づくだろう．</div><div class="q-raw">[ will make, a little, realize, you, reflection ] you are wrong.</div><div class="mode-slot"></div></div>
     </div>
 
     <div class="section" data-sec="9">
-      <h2>発展問題３｜英作 <span class="tag">Output</span></h2>
-      <div class="q-item" data-qid="a3-1"><div class="q-label">(1)</div><div class="q-jp">吹雪のために彼女は学校へ行けなかった．</div><div class="mode-slot"></div></div>
+      <h2 class="sec-head">発展問題３｜英作 <span class="tag">Output</span><button class="sec-toggle" data-sec-toggle>Hide</button></h2><div class="sec-body"><div class="q-item" data-qid="a3-1"><div class="q-label">(1)</div><div class="q-jp">吹雪のために彼女は学校へ行けなかった．</div><div class="mode-slot"></div></div>
       <div class="q-item" data-qid="a3-2"><div class="q-label">(2)</div><div class="q-jp">私はその結果にまったく満足していない．</div><div class="mode-slot"></div></div>
     </div>
   
   </main>
+    </section>
+  </div>
+</div>
+
+<button class="jump-btn" id="jumpBtn">Jump</button>
+
+<div class="palette" id="palette">
+  <div class="palette-box">
+    <input class="palette-input" id="paletteInput" placeholder="Type a section or question number… (Esc to close)" />
+    <div class="palette-list" id="paletteList"></div>
+  </div>
 </div>
 
 <script>
@@ -555,7 +911,7 @@ const liveSet = new Set();
 function makePlaceholder(item){
   if(item.classList.contains("virtual")) return;
   const qid=item.dataset.qid;
-  const h = heightCache.get(qid) || item.getBoundingClientRect().height || 140;
+  const h = Math.max(heightCache.get(qid) || item.getBoundingClientRect().height || 140, 140);
   heightCache.set(qid, h);
 
   const rectBefore = item.getBoundingClientRect();
@@ -731,7 +1087,7 @@ function rebuildAllLive(){
     setupToggles(item);
   });
   document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
-    ph.style.height=(heightCache.get(ph.dataset.qid)||140)+"px";
+    ph.style.height=Math.max(heightCache.get(ph.dataset.qid)||140,140)+"px";
   });
 }
 
@@ -775,8 +1131,356 @@ document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
   setupToggles(item);
 });
 
+
+
+
+/* ===== Flatten sections (hard reset) =====
+   Guarantee every .section is a direct child of #contentRoot.
+   This fixes any accidental nesting that causes shrinking frames.
+*/
+function flattenSections(){
+  const root = document.getElementById("contentRoot");
+  if(!root) return;
+
+  // get all sections in current document order
+  const allSections = [...root.querySelectorAll(".section")];
+
+  allSections.forEach(sec=>{
+    if(sec.parentElement !== root){
+      root.appendChild(sec); // move to top-level, preserving overall order among sections
+    }
+  });
+
+  // remove any empty sec-body after moving kids out
+  [...root.querySelectorAll(".section .sec-body")].forEach(body=>{
+    if(body.querySelector(".section")) {
+      // if any leftover nested sections, move them out too
+      [...body.querySelectorAll(".section")].forEach(n=>root.appendChild(n));
+    }
+  });
+
+  // final sweep: unwrap nested sec-body layers
+  [...root.querySelectorAll(".section .sec-body .sec-body")].forEach(inner=>{
+    const outer = inner.closest(".sec-body");
+    if(outer && outer !== inner){
+      while(inner.firstChild){
+        outer.insertBefore(inner.firstChild, inner);
+      }
+      inner.remove();
+    }
+  });
+}
+flattenSections();
+
 preMeasureHeights();
+
+
 initVirtualization();
+
+/* ===== Mac‑app nav + command palette (lightweight) ===== */
+const sideList = document.getElementById("sideList");
+const jumpBtn = document.getElementById("jumpBtn");
+const palette = document.getElementById("palette");
+const paletteBtn = document.getElementById("paletteBtn");
+const paletteInput = document.getElementById("paletteInput");
+const paletteList = document.getElementById("paletteList");
+const sideMode = document.getElementById("sideMode");
+const sideTheme = document.getElementById("sideTheme");
+const sideModePill = document.getElementById("sideModePill");
+const sideThemePill = document.getElementById("sideThemePill");
+
+// Top button (very top of page)
+const topBtn = document.getElementById("topBtn");
+topBtn.addEventListener("click", ()=>window.scrollTo({top:0, behavior:"smooth"}));
+
+// Sidebar hide/show
+const layoutEl = document.querySelector(".layout");
+const sideHideBtn = document.getElementById("sideHideBtn");
+
+// Appbar + Sidebar hide/show (appbar button is always visible)
+const appSideToggle = document.getElementById("appSideToggle");
+function setSidebarState(hidden){
+  layoutEl.classList.toggle("hide-sidebar", hidden);
+  if(sideHideBtn){
+    sideHideBtn.innerHTML = hidden
+      ? 'Show Sidebar <span class="side-pill">⇥</span>'
+      : 'Hide Sidebar <span class="side-pill">⇤</span>';
+  }
+  appSideToggle.textContent = hidden ? "🗂 Show Sidebar" : "🗂 Hide Sidebar";
+}
+appSideToggle.addEventListener("click", ()=>{
+  const hidden = layoutEl.classList.contains("hide-sidebar");
+  setSidebarState(!hidden);
+});
+// init label
+setSidebarState(layoutEl.classList.contains("hide-sidebar"));
+
+sideHideBtn.addEventListener("click", ()=>{
+  const hidden = layoutEl.classList.contains("hide-sidebar");
+  setSidebarState(!hidden);
+  return;
+  sideHideBtn.innerHTML = hidden
+    ? 'Show Sidebar <span class="side-pill">⇥</span>'
+    : 'Hide Sidebar <span class="side-pill">⇤</span>';
+});
+
+
+// Build section list from DOM headings
+const sectionNodes = [...document.querySelectorAll(".section[data-sec]")];
+const sectionsMeta = sectionNodes.map(sec=>{
+  const id = sec.dataset.sec;
+  const title = sec.querySelector("h2")?.innerText?.trim() || ("Section "+id);
+  return {id, title, node: sec};
+});
+
+function buildSidebar(){
+  sideList.innerHTML = "";
+  sectionsMeta.forEach(s=>{
+    const el = document.createElement("div");
+    el.className = "side-item";
+    el.dataset.sec = s.id;
+    el.innerHTML = `<span>${s.title}</span><span class="side-pill">#${s.id}</span>`;
+    el.onclick = ()=> s.node.scrollIntoView({behavior:"smooth", block:"start"});
+    sideList.appendChild(el);
+  });
+}
+buildSidebar();
+
+// Section hide/show toggles
+function initSectionToggles(){
+  document.querySelectorAll(".section .sec-toggle[data-sec-toggle]").forEach(btn=>{
+    btn.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const sec = btn.closest(".section");
+      sec.classList.toggle("collapsed");
+      btn.textContent = sec.classList.contains("collapsed") ? "Show" : "Hide";
+      // move view to the top of this section after toggle
+      sec.scrollIntoView({behavior:"smooth", block:"start"});
+      // after collapsing/expanding, update virtualization height cache
+      const qNodes = sec.querySelectorAll(".q-item[data-qid]");
+      qNodes.forEach(n=>{
+        const qid=n.dataset.qid;
+        if(qid){
+          const h=n.getBoundingClientRect().height||140;
+          heightCache.set(qid,h);
+        }
+      });
+    });
+  });
+}
+initSectionToggles();
+
+
+function updateActiveSection(){
+  let active = sectionsMeta[0];
+  for(const s of sectionsMeta){
+    const r=s.node.getBoundingClientRect();
+    if(r.top <= 120) active=s;
+  }
+  sideList.querySelectorAll(".side-item").forEach(i=>{
+    i.classList.toggle("active", i.dataset.sec===active.id);
+  });
+}
+window.addEventListener("scroll", ()=>{ if(!isScrolling) updateActiveSection(); }, {passive:true});
+updateActiveSection();
+
+// Jump button opens palette on mobile
+jumpBtn.addEventListener("click", ()=> openPalette());
+
+// Sidebar quick toggles
+sideMode.addEventListener("click", ()=>{
+  modeBtn.click();
+});
+sideTheme.addEventListener("click", ()=>{
+  document.getElementById("themeBtn").click();
+});
+
+// Keep pills in sync
+const _origModeClick = modeBtn.onclick;
+modeBtn.addEventListener("click", ()=>{
+  sideModePill.textContent = mode;
+});
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  sideThemePill.textContent = document.body.classList.contains("dark") ? "Dark" : "Light";
+});
+
+// Command palette
+function openPalette(){
+  palette.classList.add("open");
+  paletteInput.value="";
+  renderPalette("");
+  setTimeout(()=>paletteInput.focus(), 0);
+}
+function closePalette(){ palette.classList.remove("open"); }
+
+paletteBtn.addEventListener("click", openPalette);
+window.addEventListener("keydown", (e)=>{
+  if((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="k"){
+    e.preventDefault(); openPalette();
+  }
+  if(e.key==="Escape" && palette.classList.contains("open")) closePalette();
+});
+
+palette.addEventListener("click",(e)=>{ if(e.target===palette) closePalette(); });
+
+function renderPalette(q){
+  const query=q.trim().toLowerCase();
+  const results=[];
+  // sections
+  sectionsMeta.forEach(s=>{
+    if(!query || s.title.toLowerCase().includes(query) || ("#"+s.id).includes(query)){
+      results.push({label:s.title, sub:"#"+s.id, action:()=>s.node.scrollIntoView({behavior:"smooth", block:"start"})});
+    }
+  });
+  // question numbers (qid)
+  const qNodes=[...document.querySelectorAll(".q-item[data-qid]")];
+  qNodes.forEach(n=>{
+    const qid=n.dataset.qid;
+    if(query && qid.toLowerCase().includes(query)){
+      results.push({label:qid, sub:"question", action:()=>n.scrollIntoView({behavior:"smooth", block:"center"})});
+    }
+  });
+
+  paletteList.innerHTML="";
+  results.slice(0,50).forEach(r=>{
+    const el=document.createElement("div");
+    el.className="palette-item";
+    el.innerHTML=`<span>${r.label}</span><span class="side-pill">${r.sub}</span>`;
+    el.onclick=()=>{ closePalette(); r.action(); };
+    paletteList.appendChild(el);
+  });
+  if(!results.length){
+    const el=document.createElement("div");
+    el.className="palette-item"; el.textContent="No matches";
+    paletteList.appendChild(el);
+  }
+}
+paletteInput.addEventListener("input", ()=> renderPalette(paletteInput.value));
+
+
 </script>
+<button class="go-top-btn hidden" id="goTopBtn" aria-label="Go to top">⬆️ Top</button>
+
+
+
+<script>
+
+
+
+<script>
+/* ===== v21 Full Pre-Restore After Load + Apple-ish UI =====
+   - Overlay always visible on load
+   - Restores all virtual questions in staggered idle batches
+   - Updates progress bar + percent
+   - Fades overlay out cleanly when done
+*/
+window.addEventListener("load", ()=>{
+  const overlay = document.getElementById("smoothOverlay");
+  const bar = document.getElementById("smoothProgress");
+  const pct = document.getElementById("smoothPct");
+
+  const placeholders = [...document.querySelectorAll(".q-placeholder.virtual")];
+  const total = placeholders.length;
+
+  const setP = (done)=>{
+    const p = total ? Math.round((done/total)*100) : 100;
+    if(bar) bar.style.width = p + "%";
+    if(pct) pct.textContent = p + "%";
+  };
+
+  if(total === 0){
+    overlay?.classList.add("hidden");
+    return;
+  }
+
+  let done = 0;
+  setP(done);
+
+  const restoreOne = (ph)=>{
+    const htmlStr = ph.dataset._html || "";
+    if(htmlStr){
+      const wrap = document.createElement("div");
+      wrap.innerHTML = htmlStr;
+      const item = wrap.firstElementChild;
+      if(item){
+        ph.replaceWith(item);
+      }else{
+        ph.remove();
+      }
+    }else{
+      ph.remove();
+    }
+    done++;
+    setP(done);
+  };
+
+  // Start after tiny delay so first paint happens instantly
+  setTimeout(()=>{
+    placeholders.forEach((ph, i)=>{
+      setTimeout(()=>restoreOne(ph), i*7);
+    });
+
+    // Final sweep + completion fade
+    setTimeout(()=>{
+      document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>restoreOne(ph));
+
+      const fade = document.createElement("div");
+      fade.className = "fade-complete";
+      document.body.appendChild(fade);
+
+      overlay?.classList.add("hidden");
+
+      setTimeout(()=>fade.remove(), 900);
+    }, total*8 + 180);
+
+  }, 220);
+});
+</script>
+
 </body>
+
+<script>
+/* ===== Bottom-right Top button (v18) =====
+   Runs after DOM is ready (script placed after body).
+   Auto-hides on scroll down, reappears on scroll up (iOS Safari vibe).
+*/
+(function(){
+  const btn = document.getElementById("goTopBtn");
+  if(!btn) return;
+
+  btn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  function update(){
+    const y = window.scrollY;
+    const goingDown = y > lastY + 2;
+    const nearTop = y < 140;
+
+    if(nearTop){
+      btn.classList.add("hidden");
+    }else if(goingDown){
+      btn.classList.add("hidden");
+    }else{
+      btn.classList.remove("hidden");
+    }
+
+    lastY = y;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", ()=>{
+    if(!ticking){
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
+})();
+</script>
 </html>
