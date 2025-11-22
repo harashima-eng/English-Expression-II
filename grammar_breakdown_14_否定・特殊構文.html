@@ -2,246 +2,355 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>Grammar Breakdown 14｜否定・特殊構文</title>
+  <title>Grammar Breakdown 14｜UltraLite v4 (Full Virtualization)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     :root{
-      --bg:#f3f4f6; --bg-card:#ffffff; --text:#0f172a; --text-soft:#475569;
-      --accent:#4f46e5; --accent-soft: rgba(79,70,229,.10); --border:#e2e8f0;
-      --hint:#2563eb; --answer:#16a34a; --glow:#facc15; --shadow:0 12px 35px rgba(15,23,42,.12);
-      --warn:#f59e0b;
-    }
+  /* iOS Notes-like neutral grays */
+  --bg:#f2f3f5;            /* page gray */
+  --bg-card:#ffffff;      /* note paper */
+  --text:#111827;         /* near-black */
+  --text-soft:#6b7280;    /* iOS secondary label-ish */
+
+  --accent:#4f46e5;       /* keep your purple for labels */
+  --accent-soft: rgba(79,70,229,.07);
+
+  --border:#e2e5ea;       /* hairline gray */
+  --hint:#2563eb; 
+  --answer:#16a34a; 
+  --warn:#f59e0b;
+
+  --shadow:0 1px 4px rgba(15,23,42,.05);
+  --shell-shadow:0 6px 18px rgba(15,23,42,.12);
+
+  --radius:20px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --speed-fast:.10s; --speed:.16s; --speed-slow:.22s;
+}
     body.dark{
-      --bg:#020617; --bg-card:#0b1220; --text:#e5e7eb; --text-soft:#94a3b8;
-      --accent:#818cf8; --accent-soft: rgba(129,140,248,.14); --border:#111827;
-      --shadow:0 12px 35px rgba(0,0,0,.45);
+  --bg:#0b0d12;           /* notes dark paper */
+  --bg-card:#121621;
+  --text:#e5e7eb;
+  --text-soft:#9ca3af;
+
+  --accent:#8a93ff;
+  --accent-soft: rgba(138,147,255,.12);
+
+  --border:#1a2030;
+  --shadow:0 2px 8px rgba(0,0,0,.5);
+  --shell-shadow:0 8px 20px rgba(0,0,0,.65);
+}
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important;animation:none !important;scroll-behavior:auto !important;}
     }
     body{
-      font-family: system-ui, -apple-system, "Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
-      background: radial-gradient(circle at top left,#6366f1 0,#0f172a 45%, #020617 100%);
-      color:var(--text); padding:14px; min-height:100vh;
+      font-family: system-ui, -apple-system, "SF Pro Text","Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic", sans-serif;
+      background: linear-gradient(180deg,#0a0c10 0%, #05070a 100%);
+      color:var(--text); padding:12px; min-height:100vh;
+      scroll-behavior:smooth;
     }
     .shell{
-      max-width:1400px; margin:0 auto; background:var(--bg); border-radius:22px; overflow:hidden;
-      border:1px solid rgba(148,163,184,.35); box-shadow:0 30px 80px rgba(15,23,42,.40);
+      max-width:1120px; margin:0 auto; background:var(--bg);
+      border-radius:20px; overflow:hidden;
+      border:1px solid rgba(148,163,184,.35);
+      box-shadow:var(--shell-shadow);
+      transform:translateY(3px); opacity:0;
+      animation:shellIn .35s var(--ease) forwards;
     }
+    @keyframes shellIn{to{transform:translateY(0);opacity:1;}}
     header{
-      background: linear-gradient(135deg, rgba(15,23,42,.98), rgba(30,64,175,.96));
-      color:#e5e7eb; padding:16px 18px; border-bottom:1px solid rgba(148,163,184,.35);
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      color:#e5e7eb; padding:16px 16px;
+      border-bottom:1px solid rgba(148,163,184,.28);
+      display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+      position:sticky; top:0; z-index:20;
+      background: linear-gradient(135deg, rgba(2,6,23,.98), rgba(30,64,175,.96));
     }
-    header h1{font-size:1.25rem;letter-spacing:.03em;}
-    header .sub{font-size:.85rem;color:#cbd5f5;}
+    header h1{font-size:1.12rem;letter-spacing:.015em;}
+    header .sub{font-size:.82rem;color:#cbd5f5;}
     .btn{
-      cursor:pointer;border:none;outline:none; padding:7px 12px;border-radius:999px; font-size:.82rem;font-weight:600;
-      display:inline-flex;align-items:center;gap:6px; background:rgba(15,23,42,.8);
-      color:#e5e7eb;border:1px solid rgba(148,163,184,.7); transition:.18s ease;
+      cursor:pointer;border:none;outline:none; padding:8px 13px;border-radius:999px;
+      font-size:.82rem;font-weight:800; letter-spacing:.015em;
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(9,13,27,.94); color:#e5e7eb;
+      border:1px solid rgba(148,163,184,.55);
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      will-change:transform;
     }
-    .btn:hover{background:rgba(30,64,175,.95);transform:translateY(-1px);}
+    .btn:active{transform:translateY(1px) scale(.98);}
+    .btn.ghost{background:transparent;color:var(--text);border-color:var(--border);}
+    @media (hover:hover){
+      .btn:hover{background:rgba(30,64,175,.98);transform:translateY(-1px);}
+      .btn.ghost:hover{background:rgba(79,70,229,.055);border-color:var(--accent);}
+      .q-item:hover{transform:translateY(-1px);}
+      .mini:hover{transform:translateY(-1px);background:rgba(79,70,229,.055);border-color:var(--accent);}
+      .qa-box:hover{border-color:rgba(79,70,229,.55);background:rgba(79,70,229,.02);}
+    }
     .topbar{
-      padding:10px 12px; background:var(--bg); border-bottom:1px solid var(--border);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-      font-size:.82rem;color:var(--text-soft);
+      padding:8px 10px; background:var(--bg);
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+      font-size:.8rem;color:var(--text-soft);
     }
-    .columns{
-      display:flex;gap:12px; height: calc(100vh - 165px); max-height: 850px; padding:12px; transition:.2s ease;
-    }
-    .columns.one-col{ flex-direction:column; height:auto; max-height:none; }
-    .pane{
-      flex:1; background:var(--bg-card); border:1px solid var(--border); border-radius:18px; padding:12px;
-      overflow:auto; box-shadow:var(--shadow); scroll-behavior:smooth; position:relative;
-    }
-    .pane-title{
-      font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);
-      margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;
-    }
+    main{ padding:12px; }
     .section{
-      border:1px solid rgba(148,163,184,.4); background:rgba(148,163,184,.06); border-radius:14px; padding:10px; margin-bottom:10px;
+      border:0.7px solid var(--border);
+      background:var(--bg-card);
+      border-radius:14px; padding:12px; margin-bottom:12px;
+      contain: layout paint;
     }
-    .section h2{ font-size:.95rem; display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-    .tag{ font-size:.7rem;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:700; }
+    .section h2{
+      font-size:.96rem;
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:6px;
+    }
+    .tag{
+      font-size:.7rem;padding:2px 9px;border-radius:999px;background:rgba(79,70,229,.055);
+      color:var(--accent);font-weight:800;
+      border:1px solid rgba(79,70,229,.20);
+    }
     .q-item{
-      padding:8px 8px 10px; margin-top:6px; border-top:1px dashed rgba(148,163,184,.6);
-      border-radius:10px; position:relative;
+      padding:12px 12px 14px; margin-top:10px;
+      border-top:0.7px dashed rgba(148,163,184,.45);
+      border-radius:12px; position:relative;
+      background:var(--bg-card);
+      box-shadow:var(--shadow);
+      transition:transform var(--speed-fast) var(--ease);
+      will-change:transform;
+      contain: content;
     }
     .q-item:first-of-type{border-top:none;margin-top:0;}
-    .q-label{font-weight:800;color:var(--accent);font-size:.9rem;margin-bottom:4px;}
-    .q-jp{font-size:.86rem;color:var(--text-soft);margin-bottom:3px;}
-    .q-en{font-size:.9rem;line-height:1.65;}
+    .q-label{font-weight:900;color:var(--accent);font-size:.9rem;margin-bottom:4px;}
+    .q-jp{font-size:.88rem;color:var(--text-soft);margin-bottom:3px;}
+    .q-en{font-size:1rem;line-height:1.82;}
     .q-raw{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-size:.84rem;background:rgba(15,23,42,.06); padding:6px;border-radius:8px;margin-top:4px; white-space:pre-wrap;
+      font-size:.86rem;background:rgba(15,23,42,.05);
+      padding:6px 7px;border-radius:8px;margin-top:6px; white-space:pre-wrap; line-height:1.6;
+      border:0.7px solid var(--border);
     }
-    .q-highlight{
-      background:transparent !important; border:2px solid var(--glow) !important;
-      box-shadow:0 0 0 2px rgba(250,204,21,.25), 0 8px 20px rgba(15,23,42,.25);
-    }
-    .toggle-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+    .toggle-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
     .mini{
-      cursor:pointer;border:none;outline:none; padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:800;
-      display:inline-flex;align-items:center;gap:6px; transition:.18s ease; border:1px solid var(--border);
-      background:rgba(15,23,42,.04);color:var(--text);
+      cursor:pointer;border:none;outline:none; padding:6px 11px;border-radius:999px;
+      font-size:.78rem;font-weight:900; letter-spacing:.015em;
+      display:inline-flex;align-items:center;gap:6px;
+      transition:transform var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+      border:0.7px solid var(--border);
+      background:transparent;color:var(--text);
+      will-change:transform;
     }
-    .mini:hover{transform:translateY(-1px);background:var(--accent-soft);border-color:var(--accent);}
     .mini.hint{border-color:rgba(37,99,235,.35);}
     .mini.answer{border-color:rgba(22,163,74,.35);}
     .mini.warn{border-color:rgba(245,158,11,.5);}
 
-    .ex{ margin-top:6px;display:grid;gap:8px; }
+    .accordion{
+      display:grid; grid-template-rows:0fr;
+      transition:grid-template-rows var(--speed-slow) var(--ease);
+    }
+    .accordion.open{grid-template-rows:1fr;}
+    .accordion-inner{
+      overflow:hidden;
+      opacity:0; transform:translateY(-3px);
+      transition:opacity var(--speed) var(--ease), transform var(--speed) var(--ease);
+    }
+    .accordion.open .accordion-inner{opacity:1; transform:translateY(0);}
+
+    .ex{ margin-top:8px;display:grid;gap:8px; }
     .bubble{
-      border-radius:14px;padding:10px 12px; border-left:6px solid transparent; background:rgba(15,23,42,.04);
-      font-size:.9rem;line-height:1.7; box-shadow:0 6px 16px rgba(15,23,42,.08);
-      transform-origin:top; transition:max-height .28s ease, opacity .22s ease, transform .22s ease;
-      max-height:0;opacity:0;transform:translateY(-4px); overflow:hidden;
+      border-radius:12px;padding:10px 12px;
+      border-left:5px solid transparent; background:rgba(15,23,42,.03);
+      font-size:.98rem;line-height:1.82;
     }
-    .bubble.open{max-height:800px;opacity:1;transform:translateY(0);}
-    .bubble .label{font-weight:900;font-size:.8rem;letter-spacing:.03em;margin-bottom:4px;display:inline-flex;align-items:center;gap:6px;}
-    .bubble.hint{ border-left-color:var(--hint); background:rgba(37,99,235,.08); }
-    .bubble.answer{ border-left-color:var(--answer); background:rgba(22,163,74,.08); }
-    .bubble.warn{ border-left-color:var(--warn); background:rgba(245,158,11,.10); }
-    .bubble .jp{color:var(--text-soft);font-size:.85rem;margin-top:4px;}
+    .bubble .label{font-weight:900;font-size:.78rem;letter-spacing:.05em;margin-bottom:5px;}
+    .bubble.hint{ border-left-color:var(--hint); background:rgba(37,99,235,.06); }
+    .bubble.answer{ border-left-color:var(--answer); background:rgba(22,163,74,.06); }
+    .bubble.warn{ border-left-color:var(--warn); background:rgba(245,158,11,.08); }
+    .bubble .jp{color:var(--text-soft);font-size:.85rem;margin-top:5px;}
 
-    .columns.two-cols .merge-block{ display:none; }
-    .columns.one-col #rightPane{display:none;}
-    .merge-block{margin-top:8px;}
+    .qa-split{margin-top:8px;display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+    @media(max-width:720px){ .qa-split{grid-template-columns:1fr;} }
+    .qa-box{
+      background:transparent;border:1.4px solid var(--border);border-radius:12px;
+      padding:7px 9px 9px;position:relative;contain:layout paint;
+      transition:border var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease);
+    }
+    .qa-box::before{
+      content:""; position:absolute; left:9px; right:9px; top:0;
+      height:3px; border-radius:999px; background:var(--border);
+    }
+    .qa-box.hint::before{ background:linear-gradient(90deg,var(--hint),transparent); }
+    .qa-box.answer::before{ background:linear-gradient(90deg,var(--answer),transparent); }
+    .qa-head{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:.82rem;font-weight:900;padding-top:4px;}
+    .qa-body{ margin-top:6px; font-size:.98rem; line-height:1.82; }
+    .qa-body .jp{color:var(--text-soft);font-size:.85rem;margin-top:5px;}
 
-    @media (max-width:900px){ .columns{flex-direction:column;height:auto;max-height:none;} }
+    .hintless-note{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:.76rem;font-weight:800;color:var(--warn);
+      background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);
+      padding:2px 7px;border-radius:999px;margin-left:6px;
+    }
+
+    .q-placeholder{
+      margin-top:10px;
+      border-radius:12px;
+      position:relative;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,.015), rgba(15,23,42,.03)),
+        linear-gradient(90deg, transparent, rgba(79,70,229,.06), transparent);
+      border:0.7px solid var(--border);
+      padding:12px;
+      min-height:120px;
+      display:grid;
+      gap:10px;
+      align-content:center;
+      color:var(--text-soft);
+      font-size:.82rem;
+    }
+    .q-placeholder .sk-line{
+      height:10px;border-radius:999px;
+      background:rgba(15,23,42,.06);
+    }
+    .q-placeholder .sk-line.wide{width:88%;}
+    .q-placeholder .sk-line.mid{width:64%;}
+    .q-placeholder .sk-line.short{width:40%;}
+    .q-placeholder .sk-chip{
+      width:90px;height:20px;border-radius:999px;
+      background:rgba(79,70,229,.10);
+      border:1px solid rgba(79,70,229,.18);
+    }
+    /* super-light shimmer */
+    .q-placeholder::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.5) 50%, transparent 70%);
+      transform:translateX(-120%);
+      animation: shimmer 1.8s linear infinite;
+      will-change: transform;
+      pointer-events:none;
+      opacity:.6;
+    }
+    body.dark .q-placeholder::after{
+      background:linear-gradient(100deg, transparent 30%, rgba(129,140,248,.22) 50%, transparent 70%);
+      opacity:.8;
+    }
+    @keyframes shimmer{to{transform:translateX(120%);}}
+    @media (prefers-reduced-motion: reduce){
+      .q-placeholder::after{animation:none;}
+    }
   
-    /* --- UX v5 polish --- */
-    .pane{
-      scroll-behavior:auto; /* avoid smooth-scroll inertia during sync */
+    /* Freeze heavy paint during active scroll (perf win) */
+    body.scrolling .q-item,
+    body.scrolling .qa-box,
+    body.scrolling .bubble,
+    body.scrolling .q-placeholder{
+      box-shadow:none !important;
+      transition:none !important;
     }
-    .columns.one-col .pane{
-      scroll-behavior:smooth; /* in merge mode smooth is fine */
-    }
-    /* lock typography so left/right render the same */
-    .q-item, .bubble, .q-en, .q-jp, .q-raw{
-      font-size:.92rem;
-      line-height:1.75;
-      letter-spacing:.01em;
-      font-kerning: normal;
-      text-rendering: geometricPrecision;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    .q-jp{font-size:.9rem;}
-    .q-raw{font-size:.88rem; line-height:1.7;}
-    .bubble{font-size:.92rem;}
-    .section{margin-bottom:14px;}
-    .q-item{margin-top:10px; padding:10px 10px 12px;}
-    .toggle-row{margin-top:8px;}
-    .ex{margin-top:8px; gap:10px;}
-    .mini{padding:7px 12px; font-size:.8rem;}
-    .bubble{padding:12px 14px; border-radius:16px;}
-    .section h2{margin-bottom:8px;}
-    .pane-title{margin-bottom:10px;}
+    body.scrolling .q-placeholder::after{ animation:none !important; opacity:0.2 !important; }
 
   </style>
 </head>
+
 <body>
 <div class="shell">
   <header>
     <div>
       <h1>14 否定・特殊構文｜Grammar Breakdown</h1>
-      <div class="sub">基本問題・For Communication・発展問題</div>
+      <div class="sub">UltraLite v4 — full question virtualization (windowing) + answer on click</div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button class="btn" id="themeBtn">🌗 Light / Dark</button>
-      <button class="btn" id="layoutBtn">📄 1-Column (Merge)</button>
+      <button class="btn" id="modeBtn">🅰️ Mode A</button>
+      <button class="btn ghost" id="collapseAllBtn">🧹 Close all</button>
       <button class="btn" id="downloadBtn">💾 Download HTML</button>
     </div>
   </header>
+
   <div class="topbar">
-    <div>⬅ 左：問題　｜　右：Hint + Answer + 解説 ➡</div>
-    <div style="font-size:.75rem;">PCは2カラム／スマホは1カラム(merge)が見やすい</div>
+    <div id="modeDesc">Mode A: stacked Hint/Answer accordions.</div>
+    <div>Full virtualization ON.</div>
   </div>
 
-  <main class="columns one-col" id="columns">
-    <section class="pane" id="leftPane">
-      <div class="pane-title">Questions</div>
+  <main id="contentRoot">
 
-      <!-- CONTENT (same as v2) -->
-      <div class="section">
-        <h2>基本問題１｜語句補充 <span class="tag">Negation Basics</span></h2>
-        <div class="q-item" data-qid="b1-1"><div class="q-label">(1)</div><div class="q-jp">私たちの会社で彼が辞職することを知っている人はほとんどいない．</div><div class="q-en">(　　　　　) people in our office know he is going to resign.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b1-2"><div class="q-label">(2)</div><div class="q-jp">カズヤはピアノが上手です．</div><div class="q-en">Kazuya is a (　　　　　) (　　　　　).</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b1-3"><div class="q-label">(3)</div><div class="q-jp">もしディックがその祭りに行かないのなら，僕も行かないよ．</div><div class="q-en">If Dick doesn’t go to the festival, I won’t, (　　　　　).</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b1-4"><div class="q-label">(4)</div><div class="q-jp">休暇中はよくお休みになれましたか．</div><div class="q-en">Did you have a (　　　　　) (　　　　　) during the holidays?</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b1-5"><div class="q-label">(5)</div><div class="q-jp">その作家はめったに人前に姿を見せない．</div><div class="q-en">The writer (　　　　　) appears in public.</div><div class="merge-block"></div></div>
-      </div>
+    <!-- SECTIONS / QUESTIONS (same DOM shells, content unchanged) -->
+    <div class="section" data-sec="1">
+      <h2>基本問題１｜語句補充 <span class="tag">Negation Basics</span></h2>
+      <div class="q-item" data-qid="b1-1"><div class="q-label">(1)</div><div class="q-jp">私たちの会社で彼が辞職することを知っている人はほとんどいない．</div><div class="q-en">(　　　　　) people in our office know he is going to resign.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-2"><div class="q-label">(2)</div><div class="q-jp">カズヤはピアノが上手です．</div><div class="q-en">Kazuya is a (　　　　　) (　　　　　).</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-3"><div class="q-label">(3)</div><div class="q-jp">もしディックがその祭りに行かないのなら，僕も行かないよ．</div><div class="q-en">If Dick doesn’t go to the festival, I won’t, (　　　　　).</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-4"><div class="q-label">(4)</div><div class="q-jp">休暇中はよくお休みになれましたか．</div><div class="q-en">Did you have a (　　　　　) (　　　　　) during the holidays?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b1-5"><div class="q-label">(5)</div><div class="q-jp">その作家はめったに人前に姿を見せない．</div><div class="q-en">The writer (　　　　　) appears in public.</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>基本問題２｜書きかえ <span class="tag">Structures</span></h2>
-        <div class="q-item" data-qid="b2-1"><div class="q-label">(1)</div><div class="q-en">Ben is most unlikely to betray us.<br>Ben would be (　　　　　) (　　　　　) person to betray us.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b2-2"><div class="q-label">(2)</div><div class="q-en">Some people are sure that ghosts exist.<br>Some people are sure of the (　　　　　) (　　　　　) ghosts.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b2-3"><div class="q-label">(3)</div><div class="q-en">I don’t like any of these pictures.<br>I like (　　　　　) (　　　　　) these pictures.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b2-4"><div class="q-label">(4)</div><div class="q-en">Why did he change his mind?<br>What (　　　　　) (　　　　　) change his mind?</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b2-5"><div class="q-label">(5)</div><div class="q-en">What you are saying is only an armchair theory.<br>What you are saying is (　　　　　) (　　　　　) an armchair theory.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b2-6"><div class="q-label">(6)</div><div class="q-en">Though they were tired, they went on working late.<br>(　　　　　) (　　　　　) they were, they went on working late.</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="2">
+      <h2>基本問題２｜書きかえ <span class="tag">Structures</span></h2>
+      <div class="q-item" data-qid="b2-1"><div class="q-label">(1)</div><div class="q-en">Ben is most unlikely to betray us.<br>Ben would be (　　　　　) (　　　　　) person to betray us.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-2"><div class="q-label">(2)</div><div class="q-en">Some people are sure that ghosts exist.<br>Some people are sure of the (　　　　　) (　　　　　) ghosts.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-3"><div class="q-label">(3)</div><div class="q-en">I don’t like any of these pictures.<br>I like (　　　　　) (　　　　　) these pictures.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-4"><div class="q-label">(4)</div><div class="q-en">Why did he change his mind?<br>What (　　　　　) (　　　　　) change his mind?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-5"><div class="q-label">(5)</div><div class="q-en">What you are saying is only an armchair theory.<br>What you are saying is (　　　　　) (　　　　　) an armchair theory.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b2-6"><div class="q-label">(6)</div><div class="q-en">Though they were tired, they went on working late.<br>(　　　　　) (　　　　　) they were, they went on working late.</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>基本問題３｜英→日 <span class="tag">Translation</span></h2>
-        <div class="q-item" data-qid="b3-1"><div class="q-label">(1)</div><div class="q-en">I often go to the library, and so does my brother.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b3-2"><div class="q-label">(2)</div><div class="q-en">You should not despise people because they are not rich.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b3-3"><div class="q-label">(3)</div><div class="q-en">When angry, count to ten before you speak.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b3-4"><div class="q-label">(4)</div><div class="q-en">We have no choice but to wait for him here.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b3-5"><div class="q-label">(5)</div><div class="q-en">This computer can save us time and energy.</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="3">
+      <h2>基本問題３｜英→日 <span class="tag">Translation</span></h2>
+      <div class="q-item" data-qid="b3-1"><div class="q-label">(1)</div><div class="q-en">I often go to the library, and so does my brother.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-2"><div class="q-label">(2)</div><div class="q-en">You should not despise people because they are not rich.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-3"><div class="q-label">(3)</div><div class="q-en">When angry, count to ten before you speak.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-4"><div class="q-label">(4)</div><div class="q-en">We have no choice but to wait for him here.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b3-5"><div class="q-label">(5)</div><div class="q-en">This computer can save us time and energy.</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>基本問題４｜並べかえ <span class="tag">Word Order</span></h2>
-        <div class="q-item" data-qid="b4-1"><div class="q-label">(1)</div><div class="q-jp">もっと早くに自己紹介をしなくてすみません．</div><div class="q-raw">I’m [ not, sooner, for, introducing, sorry, myself ].</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b4-2"><div class="q-label">(2)</div><div class="q-jp">シンデレラが舞踏会ではいていたのはこのガラスの靴だった．</div><div class="q-raw">It [ Cinderella, glass slipper, that, this, was, wore ] at the ball.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b4-3"><div class="q-label">(3)</div><div class="q-jp">私はもはやその寒さには耐えられない．</div><div class="q-raw">I [ the, any, stand, cold, longer, cannot ].</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b4-4"><div class="q-label">(4)</div><div class="q-jp">あなたの着ているTシャツを見ると，自分の国を思い出す．</div><div class="q-raw">Your T-shirt [ of, my, me, country, reminds ].</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="4">
+      <h2>基本問題４｜並べかえ <span class="tag">Word Order</span></h2>
+      <div class="q-item" data-qid="b4-1"><div class="q-label">(1)</div><div class="q-jp">もっと早くに自己紹介をしなくてすみません．</div><div class="q-raw">I’m [ not, sooner, for, introducing, sorry, myself ].</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-2"><div class="q-label">(2)</div><div class="q-jp">シンデレラが舞踏会ではいていたのはこのガラスの靴だった．</div><div class="q-raw">It [ Cinderella, glass slipper, that, this, was, wore ] at the ball.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-3"><div class="q-label">(3)</div><div class="q-jp">私はもはやその寒さには耐えられない．</div><div class="q-raw">I [ the, any, stand, cold, longer, cannot ].</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b4-4"><div class="q-label">(4)</div><div class="q-jp">あなたの着ているTシャツを見ると，自分の国を思い出す．</div><div class="q-raw">Your T-shirt [ of, my, me, country, reminds ].</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>基本問題５｜英作 <span class="tag">Production</span></h2>
-        <div class="q-item" data-qid="b5-1"><div class="q-label">(1)</div><div class="q-jp">その奨学金のおかげで彼は大学に行くことができた．</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b5-2"><div class="q-label">(2)</div><div class="q-jp">私はこんな美しい景色をこれまで見たことがない．</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b5-3"><div class="q-label">(3)</div><div class="q-jp">彼女の手紙によると，彼女は来週日本に帰ってくるそうだ．</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b5-4"><div class="q-label">(4)</div><div class="q-jp">私の父はタバコを吸わないし，私も吸わない．</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="b5-5"><div class="q-label">(5)</div><div class="q-jp">彼らが結婚するといううわさを耳にしましたか．</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="5">
+      <h2>基本問題５｜英作 <span class="tag">Production</span></h2>
+      <div class="q-item" data-qid="b5-1"><div class="q-label">(1)</div><div class="q-jp">その奨学金のおかげで彼は大学に行くことができた．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-2"><div class="q-label">(2)</div><div class="q-jp">私はこんな美しい景色をこれまで見たことがない．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-3"><div class="q-label">(3)</div><div class="q-jp">彼女の手紙によると，彼女は来週日本に帰ってくるそうだ．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-4"><div class="q-label">(4)</div><div class="q-jp">私の父はタバコを吸わないし，私も吸わない．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="b5-5"><div class="q-label">(5)</div><div class="q-jp">彼らが結婚するといううわさを耳にしましたか．</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>FOR COMMUNICATION <span class="tag">会話表現</span></h2>
-        <div class="q-item" data-qid="fc-1"><div class="q-label">(1)</div><div class="q-en">A: What’s the matter? Are you hurt?<br>B: Yes, I slipped on the floor. I think my left arm is broken.<br>A: Oh! (　　　).<br>a. I hope so / b. I hope not / c. I’m sorry not / d. I’m afraid not</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="fc-2"><div class="q-label">(2)</div><div class="q-en">A: Ken and Mary are getting married next week.<br>B: (　　　)! They got to know each other just a week ago!<br>a. No kidding / b. No offense / c. No problem / d. No sweat</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="6">
+      <h2>FOR COMMUNICATION <span class="tag">会話表現</span></h2>
+      <div class="q-item" data-qid="fc-1"><div class="q-label">(1)</div><div class="q-en">A: What’s the matter? Are you hurt?<br>B: Yes, I slipped on the floor. I think my left arm is broken.<br>A: Oh! (　　　).<br>a. I hope so / b. I hope not / c. I’m sorry not / d. I’m afraid not</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="fc-2"><div class="q-label">(2)</div><div class="q-en">A: Ken and Mary are getting married next week.<br>B: (　　　)! They got to know each other just a week ago!<br>a. No kidding / b. No offense / c. No problem / d. No sweat</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>発展問題１｜語句選択 <span class="tag">大学入試</span></h2>
-        <div class="q-item" data-qid="a1-1"><div class="q-label">(1)</div><div class="q-en">The accident I had yesterday was (　　　) my control.<br>a. in / b. out / c. over / d. beyond</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a1-2"><div class="q-label">(2)</div><div class="q-en">Susan is not a researcher and she is not a professor, (　　　).<br>a. too / b. either / c. instead / d. also</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a1-3"><div class="q-label">(3)</div><div class="q-en">The new tax system is (　　　) but perfect.<br>a. anything / b. something / c. nothing / d. everything</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a1-4"><div class="q-label">(4)</div><div class="q-en">The Internet has (　　　) us to quickly contact even friends who are far away.<br>a. let / b. made / c. suggested / d. enabled</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a1-5"><div class="q-label">(5)</div><div class="q-en">The food the restaurant offered us was (　　　) from satisfying.<br>a. almost / b. close / c. all / d. far</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a1-6"><div class="q-label">(6)</div><div class="q-en">How in the (　　　) did you get this rare vase?<br>a. space / b. world / c. air / d. cloud</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="7">
+      <h2>発展問題１｜語句選択 <span class="tag">大学入試</span></h2>
+      <div class="q-item" data-qid="a1-1"><div class="q-label">(1)</div><div class="q-en">The accident I had yesterday was (　　　) my control.<br>a. in / b. out / c. over / d. beyond</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-2"><div class="q-label">(2)</div><div class="q-en">Susan is not a researcher and she is not a professor, (　　　).<br>a. too / b. either / c. instead / d. also</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-3"><div class="q-label">(3)</div><div class="q-en">The new tax system is (　　　) but perfect.<br>a. anything / b. something / c. nothing / d. everything</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-4"><div class="q-label">(4)</div><div class="q-en">The Internet has (　　　) us to quickly contact even friends who are far away.<br>a. let / b. made / c. suggested / d. enabled</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-5"><div class="q-label">(5)</div><div class="q-en">The food the restaurant offered us was (　　　) from satisfying.<br>a. almost / b. close / c. all / d. far</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a1-6"><div class="q-label">(6)</div><div class="q-en">How in the (　　　) did you get this rare vase?<br>a. space / b. world / c. air / d. cloud</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>発展問題２｜並べかえ <span class="tag">Emphasis etc.</span></h2>
-        <div class="q-item" data-qid="a2-1"><div class="q-label">(1)</div><div class="q-jp">あなたがお兄さんから便りをもらったのはいつですか．</div><div class="q-raw">When [ from, heard, it, that, was, you ] your brother?</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a2-2"><div class="q-label">(2)</div><div class="q-jp">その話を聞くといつも彼のことを思い出します．</div><div class="q-raw">I [ that, never, hear, without, story, remembering ] him.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a2-3"><div class="q-label">(3)</div><div class="q-jp">離れてみて初めて自分の国のよいところがわかる．</div><div class="q-raw">You [ leave, appreciate, you, don’t, until, your own country ] it.</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a2-4"><div class="q-label">(4)</div><div class="q-jp">少し考えればあなたは自分が間違っていることに気づくだろう．</div><div class="q-raw">[ will make, a little, realize, you, reflection ] you are wrong.</div><div class="merge-block"></div></div>
-      </div>
+    <div class="section" data-sec="8">
+      <h2>発展問題２｜並べかえ <span class="tag">Emphasis etc.</span></h2>
+      <div class="q-item" data-qid="a2-1"><div class="q-label">(1)</div><div class="q-jp">あなたがお兄さんから便りをもらったのはいつですか．</div><div class="q-raw">When [ from, heard, it, that, was, you ] your brother?</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-2"><div class="q-label">(2)</div><div class="q-jp">その話を聞くといつも彼のことを思い出します．</div><div class="q-raw">I [ that, never, hear, without, story, remembering ] him.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-3"><div class="q-label">(3)</div><div class="q-jp">離れてみて初めて自分の国のよいところがわかる．</div><div class="q-raw">You [ leave, appreciate, you, don’t, until, your own country ] it.</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a2-4"><div class="q-label">(4)</div><div class="q-jp">少し考えればあなたは自分が間違っていることに気づくだろう．</div><div class="q-raw">[ will make, a little, realize, you, reflection ] you are wrong.</div><div class="mode-slot"></div></div>
+    </div>
 
-      <div class="section">
-        <h2>発展問題３｜英作 <span class="tag">Output</span></h2>
-        <div class="q-item" data-qid="a3-1"><div class="q-label">(1)</div><div class="q-jp">吹雪のために彼女は学校へ行けなかった．</div><div class="merge-block"></div></div>
-        <div class="q-item" data-qid="a3-2"><div class="q-label">(2)</div><div class="q-jp">私はその結果にまったく満足していない．</div><div class="merge-block"></div></div>
-      </div>
-    </section>
-
-    <section class="pane" id="rightPane">
-      <div class="pane-title">Hints / Answers</div>
-      <div id="answerRoot"></div>
-    </section>
+    <div class="section" data-sec="9">
+      <h2>発展問題３｜英作 <span class="tag">Output</span></h2>
+      <div class="q-item" data-qid="a3-1"><div class="q-label">(1)</div><div class="q-jp">吹雪のために彼女は学校へ行けなかった．</div><div class="mode-slot"></div></div>
+      <div class="q-item" data-qid="a3-2"><div class="q-label">(2)</div><div class="q-jp">私はその結果にまったく満足していない．</div><div class="mode-slot"></div></div>
+    </div>
+  
   </main>
 </div>
 
@@ -252,225 +361,422 @@ const DATA = {
   "b1-3": { hint:"否定文の「〜もまた…ない」→ not 〜 either", answer:"If Dick doesn’t go to the festival, I won’t, either.", explain:"先行する否定文を受けて「～もまた…でない」は not ～ either。", jp:"もしディックがその祭りに行かないなら、僕も行かない。" },
   "b1-4": { hint:"「よく休む」→ have a good rest", answer:"Did you have a good rest during the holidays?", explain:"「よい休みをとる」と考え 〈動詞＋形容詞＋名詞〉で表す。", jp:"休暇中はよく休めましたか。" },
   "b1-5": { hint:"「めったに〜ない」→ seldom / rarely", answer:"The writer seldom appears in public.", explain:"seldom/rarely は頻度が非常に低い＝ほぼ否定。", jp:"その作家はめったに人前に姿を見せない。" },
-
   "b2-1": { hint:"「最も〜しそうにない人」→ the last person to 〜", answer:"Ben would be the last person to betray us.", explain:"be unlikely to 〜 の自然な言い換え。", jp:"" },
   "b2-2": { hint:"that ghosts exist を名詞化 → existence of ghosts", answer:"Some people are sure of the existence of ghosts.", explain:"節の内容は名詞構文にできる。", jp:"" },
   "b2-3": { hint:"not 〜 any of ... = none of ...", answer:"I like none of these pictures.", explain:"none of + 複数名詞 で全体否定。", jp:"" },
   "b2-4": { hint:"「〜させる」→ make + O + 原形", answer:"What made him change his mind?", explain:"Why? を What made him ... に変える。", jp:"" },
   "b2-5": { hint:"only = nothing but", answer:"What you are saying is nothing but an armchair theory.", explain:"nothing but ＝「ただ〜にすぎない」。", jp:"" },
   "b2-6": { hint:"形容詞 + though/as S V", answer:"Tired though they were, they went on working late.", explain:"譲歩の倒置構文。", jp:"" },
-
   "b3-1": { hint:"", answer:"私はよく図書館へ行くし，私の兄[弟]もよく行く．", explain:"so + V + S で「Sもまた〜する」。", jp:"" },
   "b3-2": { hint:"", answer:"裕福ではないからといって人を軽べつすべきではない．", explain:"because 節だけを否定する形。", jp:"" },
   "b3-3": { hint:"", answer:"腹が立ったら，話す前に10数えなさい．", explain:"When (you are) angry の省略。", jp:"" },
   "b3-4": { hint:"", answer:"私たちはここで彼を待つしかない．", explain:"have no choice but to do ＝「〜するしかない」。", jp:"" },
   "b3-5": { hint:"", answer:"このコンピュータのおかげで私たちは時間と労力を省くことができる．", explain:"save O1 O2 の第4文型。", jp:"" },
-
   "b4-1": { hint:"be sorry for not -ing", answer:"I’m sorry for not introducing myself sooner.", explain:"否定語 not は否定したい語句の直前。", jp:"" },
   "b4-2": { hint:"It is ～ that ... の強調構文。", answer:"It was this glass slipper that Cinderella wore at the ball.", explain:"強調したい語句を It was と that の間へ。", jp:"" },
   "b4-3": { hint:"not ... any longer", answer:"I cannot stand the cold any longer.", explain:"「もはや〜ない」。", jp:"" },
   "b4-4": { hint:"remind A of B", answer:"Your T-shirt reminds me of my country.", explain:"A remind B of 〜。", jp:"" },
-
   "b5-1": { hint:"enable O to do", answer:"The scholarship enabled him to go to university.", explain:"無生物主語で「〜のおかげでOができる」。", jp:"" },
   "b5-2": { hint:"Never を文頭→倒置", answer:"Never have I seen such a beautiful sight.", explain:"否定副詞前置で助動詞倒置。", jp:"" },
   "b5-3": { hint:"Her letter says that ...", answer:"Her letter says (that) she will come back to Japan next week.", explain:"say/tell の無生物主語用法。", jp:"" },
   "b5-4": { hint:"neither + V + S", answer:"My father doesn’t smoke, and neither do I.", explain:"否定内容を受ける倒置。", jp:"" },
   "b5-5": { hint:"the rumor that ...", answer:"Have you heard the rumor that they will get married?", explain:"同格の that 節。", jp:"" },
-
   "fc-1": { hint:"", answer:"b. I hope not.", explain:"望ましくないことに「そうでないといい」。", jp:"" },
   "fc-2": { hint:"", answer:"a. No kidding.", explain:"驚き「まさか！」。", jp:"" },
-
   "a1-1": { hint:"beyond my control", answer:"d. beyond", explain:"「及ばない」＝ beyond。", jp:"" },
   "a1-2": { hint:"not 〜 either", answer:"b. either", explain:"否定＋「〜もまた」。", jp:"" },
   "a1-3": { hint:"anything but", answer:"a. anything", explain:"anything but perfect「決して完全でない」。", jp:"" },
   "a1-4": { hint:"enable O to do", answer:"d. enabled", explain:"enable の過去分詞。", jp:"" },
   "a1-5": { hint:"far from", answer:"d. far", explain:"far from satisfying。", jp:"" },
   "a1-6": { hint:"How in the world", answer:"b. world", explain:"疑問強調の慣用句。", jp:"" },
-
   "a2-1": { hint:"When was it that ...?", answer:"When was it that you heard from your brother?", explain:"強調構文の疑問形。", jp:"" },
   "a2-2": { hint:"never 〜 without ...ing", answer:"I never hear that story without remembering him.", explain:"二重否定で「必ず」。", jp:"" },
   "a2-3": { hint:"not 〜 until ...", answer:"You don’t appreciate your own country until you leave it.", explain:"「…して初めて」。", jp:"" },
   "a2-4": { hint:"S will make O do", answer:"A little reflection will make you realize you are wrong.", explain:"make O do 構文。", jp:"" },
-
   "a3-1": { hint:"prevent O from -ing", answer:"A snow storm prevented her from going to school.", explain:"「〜のために行けない」→ prevent。", jp:"" },
   "a3-2": { hint:"not 〜 at all", answer:"I am not satisfied with the result at all.", explain:"否定を強める副詞句。", jp:"" }
 };
 
-const answerRoot = document.getElementById("answerRoot");
-const leftItems = [...document.querySelectorAll("#leftPane .q-item[data-qid]")];
+let mode = "A";
+const modeBtn = document.getElementById("modeBtn");
+const modeDesc = document.getElementById("modeDesc");
+const renderedAnswers = new Set();
 
-function labelFromQid(qid){
-  const m = qid.match(/-(\d+)$/);
-  return m ? `(${m[1]})` : "";
-}
+/* scheduler */
+const idle = (fn)=>(
+  "requestIdleCallback" in window
+    ? requestIdleCallback(fn, {timeout: 200})
+    : setTimeout(fn, 0)
+);
+
+/* utilities */
 function hintText(d){
   return d.hint && d.hint.trim()
     ? d.hint
     : "この問題はヒントなし。まず自力で解いてみよう。必要なら解答を開いて確認！";
 }
-function makeAnswerBlock(qid){
+function buildHintBody(qid){
   const d = DATA[qid] || {};
-  const wrap = document.createElement("div");
-  wrap.className = "q-item";
-  wrap.dataset.qid = qid;
-  wrap.innerHTML = `
-    <div class="q-label">${labelFromQid(qid)}</div>
-    <div class="toggle-row">
-      <button class="mini hint ${(!d.hint||!d.hint.trim())?'warn':''}" data-action="hint">💡 Hint</button>
-      <button class="mini answer" data-action="answer">✅ Answer</button>
-    </div>
-    <div class="ex">
-      <div class="bubble hint ${(!d.hint||!d.hint.trim())?'warn':''}" data-box="hint">
+  const noHint = (!d.hint || !d.hint.trim());
+  return `
+    <div class="accordion bubble-wrap hint ${noHint?'warn':''}" data-box="hint">
+      <div class="accordion-inner bubble hint ${noHint?'warn':''}">
         <div class="label">💡 HINT</div>
         <div>${hintText(d)}</div>
       </div>
-      <div class="bubble answer" data-box="answer">
+    </div>`;
+}
+function buildAnswerBody(qid){
+  const d = DATA[qid] || {};
+  return `
+    <div class="accordion bubble-wrap answer" data-box="answer">
+      <div class="accordion-inner bubble answer">
         <div class="label">✅ ANSWER</div>
         <div><b>${d.answer||""}</b></div>
         ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
         ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
       </div>
+    </div>`;
+}
+
+/* render shells */
+function renderModeAShell(slot, qid){
+  const d = DATA[qid] || {};
+  const noHint = (!d.hint || !d.hint.trim());
+  slot.innerHTML = `
+    <div class="toggle-row">
+      <button class="mini hint ${noHint?'warn':''}" data-action="hint">💡 Hint ${noHint?'<span class="hintless-note">no hint</span>':''}</button>
+      <button class="mini answer" data-action="answer">✅ Answer</button>
+    </div>
+    <div class="ex" data-ex></div>
+  `;
+}
+function renderModeBShell(slot, qid){
+  const d = DATA[qid] || {};
+  const noHint = (!d.hint || !d.hint.trim());
+  slot.innerHTML = `
+    <div class="qa-split" data-split>
+      <div class="qa-box hint ${noHint?'warn':''}">
+        <div class="qa-head">
+          <span>💡 HINT ${noHint?'<span class="hintless-note">no hint</span>':''}</span>
+          <button class="mini hint ${noHint?'warn':''}" data-action="hint">Open</button>
+        </div>
+        <div class="accordion qa-acc hint ${noHint?'warn':''}">
+          <div class="accordion-inner qa-body hint ${noHint?'warn':''}" data-hint-body></div>
+        </div>
+      </div>
+      <div class="qa-box answer">
+        <div class="qa-head">
+          <span>✅ ANSWER</span>
+          <button class="mini answer" data-action="answer">Open</button>
+        </div>
+        <div class="accordion qa-acc answer">
+          <div class="accordion-inner qa-body answer" data-answer-body></div>
+        </div>
+      </div>
     </div>
   `;
-  return wrap;
-}
-leftItems.forEach(li=>{
-  const qid = li.dataset.qid;
-  answerRoot.appendChild(makeAnswerBlock(qid));
-});
-
-function setupToggles(scope=document){
-  scope.querySelectorAll(".mini").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const item = btn.closest(".q-item");
-      if(!item) return;
-      const action = btn.dataset.action;
-      const box = item.querySelector(`.bubble.${action}`);
-      if(box) box.classList.toggle("open");
-
-      // After opening/closing, layout height changes -> rebuild maps + resync
-      if(typeof refreshMaps === "function"){
-        refreshMaps();
-      }
-    });
-  });
-
-  // When bubble finishes expanding/collapsing, resync again for perfect alignment
-  scope.querySelectorAll(".bubble").forEach(bub=>{
-    bub.addEventListener("transitionend", (e)=>{
-      if(e.propertyName !== "max-height") return;
-      if(typeof refreshMaps === "function"){
-        refreshMaps();
-      }
-    });
-  });
-}
-setupToggles();
-
-
-function buildMergeBlocks(){
-  leftItems.forEach(li=>{
-    const qid = li.dataset.qid;
-    const d = DATA[qid] || {};
-    const mb = li.querySelector(".merge-block");
-    if(!mb) return;
-    mb.innerHTML = `
-      <div class="toggle-row">
-        <button class="mini hint ${(!d.hint||!d.hint.trim())?'warn':''}" data-action="hint">💡 Hint</button>
-        <button class="mini answer" data-action="answer">✅ Answer</button>
-      </div>
-      <div class="ex">
-        <div class="bubble hint ${(!d.hint||!d.hint.trim())?'warn':''}" data-box="hint">
-          <div class="label">💡 HINT</div>
-          <div>${hintText(d)}</div>
-        </div>
-        <div class="bubble answer" data-box="answer">
-          <div class="label">✅ ANSWER</div>
-          <div><b>${d.answer||""}</b></div>
-          ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
-          ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
-        </div>
-      </div>
-    `;
-  });
-  setupToggles(document.getElementById("leftPane"));
-}
-buildMergeBlocks();
-
-function setHighlight(qid){
-  document.querySelectorAll(".q-highlight").forEach(el=>el.classList.remove("q-highlight"));
-  document.querySelectorAll(`.q-item[data-qid="${qid}"]`).forEach(el=>el.classList.add("q-highlight"));
 }
 
-// improved sync: choose item whose center is closest to top+120
-const leftPane = document.getElementById("leftPane");
-const rightPane = document.getElementById("rightPane");
-const columns = document.getElementById("columns");
-let lastQid=null, ticking=false;
+/* answer injection on click */
+function injectAnswerIfNeeded(item){
+  const qid=item.dataset.qid;
+  if(renderedAnswers.has(qid)) return;
 
-function getCurrentLeftQidSmart(){
-  const st = leftPane.scrollTop;
-  const anchor = st + 140;
-  let best=leftItems[0], bestDist=Infinity;
-  for(const it of leftItems){
-    const center = it.offsetTop + it.offsetHeight/2;
-    const dist = Math.abs(center - anchor);
-    if(dist < bestDist){ bestDist=dist; best=it; }
-  }
-  return best ? best.dataset.qid : null;
-}
-function scrollRightTo(qid){
-  const target = rightPane.querySelector(`.q-item[data-qid="${qid}"]`);
-  if(!target) return;
-  rightPane.scrollTo({ top: target.offsetTop - 8, behavior:"smooth" });
-}
-leftPane.addEventListener("scroll", ()=>{
-  if(columns.classList.contains("one-col")) return;
-  if(ticking) return;
-  ticking=true;
-  requestAnimationFrame(()=>{
-    const qid=getCurrentLeftQidSmart();
-    if(qid && qid!==lastQid){
-      lastQid=qid; setHighlight(qid); scrollRightTo(qid);
+  if(mode==="A"){
+    const ex=item.querySelector("[data-ex]");
+    if(ex){
+      if(!ex.querySelector(".bubble-wrap.hint")) ex.insertAdjacentHTML("beforeend", buildHintBody(qid));
+      ex.insertAdjacentHTML("beforeend", buildAnswerBody(qid));
     }
-    ticking=false;
+  }else{
+    const hintBody=item.querySelector("[data-hint-body]");
+    const answerBody=item.querySelector("[data-answer-body]");
+    if(hintBody && !hintBody.innerHTML) hintBody.innerHTML = hintText(DATA[qid]||{});
+    if(answerBody){
+      const d=DATA[qid]||{};
+      answerBody.innerHTML = `
+        <div><b>${d.answer||""}</b></div>
+        ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
+        ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
+      `;
+    }
+  }
+  renderedAnswers.add(qid);
+}
+
+/* toggle wiring */
+function setupToggles(item){
+  item.querySelectorAll(".mini[data-action]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const action=btn.dataset.action;
+      const qid=item.dataset.qid;
+
+      if(mode==="A"){
+        const ex=item.querySelector("[data-ex]");
+        if(action==="hint"){
+          if(ex && !ex.querySelector(".bubble-wrap.hint")) ex.insertAdjacentHTML("afterbegin", buildHintBody(qid));
+          const acc=item.querySelector(".bubble-wrap.hint");
+          if(acc) acc.classList.toggle("open");
+        }else{
+          injectAnswerIfNeeded(item);
+          const acc=item.querySelector(".bubble-wrap.answer");
+          if(acc) acc.classList.toggle("open");
+        }
+      }else{
+        if(action==="hint"){
+          const hintBody=item.querySelector("[data-hint-body]");
+          if(hintBody && !hintBody.innerHTML) hintBody.innerHTML = hintText(DATA[qid]||{});
+          const acc=item.querySelector(".qa-box.hint .qa-acc");
+          if(acc) acc.classList.toggle("open");
+          btn.textContent=acc.classList.contains("open")?"Close":"Open";
+        }else{
+          injectAnswerIfNeeded(item);
+          const acc=item.querySelector(".qa-box.answer .qa-acc");
+          if(acc) acc.classList.toggle("open");
+          btn.textContent=acc.classList.contains("open")?"Close":"Open";
+        }
+      }
+    };
+  });
+}
+
+/* ===== FULL QUESTION VIRTUALIZATION (v9) =====
+   Upgrades:
+   1) Pre-measure all heights once (hidden pass) for perfect placeholders.
+   2) Restore only after scroll-idle (no mid-fling work).
+   3) Bigger overscan band to avoid placeholder flashes.
+   4) Freeze heavy paint during active scroll via body.scrolling.
+*/
+const items = [...document.querySelectorAll(".q-item[data-qid]")];
+const heightCache = new Map();
+const liveSet = new Set();
+
+function makePlaceholder(item){
+  if(item.classList.contains("virtual")) return;
+  const qid=item.dataset.qid;
+  const h = heightCache.get(qid) || item.getBoundingClientRect().height || 140;
+  heightCache.set(qid, h);
+
+  const rectBefore = item.getBoundingClientRect();
+  const html = item.dataset._html || item.outerHTML;
+  item.dataset._html = html;
+
+  const ph=document.createElement("div");
+  ph.className="q-placeholder virtual";
+  ph.dataset.qid=qid;
+  ph.dataset._html = html;
+  ph.style.height = h+"px";
+  ph.innerHTML = `
+      <div class="sk-chip"></div>
+      <div class="sk-line wide"></div>
+      <div class="sk-line mid"></div>
+      <div class="sk-line short"></div>
+      <div style="font-weight:800;letter-spacing:.03em;margin-top:2px;">
+        Loading question…
+      </div>
+  `;
+  item.replaceWith(ph);
+
+  // compensate scroll if swapped above viewport
+  const rectAfter = ph.getBoundingClientRect();
+  const delta = rectAfter.top - rectBefore.top;
+  if(Math.abs(delta)>1 && rectBefore.top < 0){
+    window.scrollBy(0, delta);
+  }
+  liveSet.delete(qid);
+}
+
+function restoreItem(ph){
+  const qid=ph.dataset.qid;
+  if(!ph.classList.contains("virtual")) return;
+  const rectBefore = ph.getBoundingClientRect();
+
+  const wrap=document.createElement("div");
+  wrap.innerHTML = ph.dataset._html || "";
+  const item=wrap.firstElementChild;
+  if(!item){ return; }
+
+  ph.replaceWith(item);
+
+  const slot=item.querySelector(".mode-slot");
+  if(slot){
+    slot.innerHTML="";
+    if(mode==="A") renderModeAShell(slot,qid);
+    else renderModeBShell(slot,qid);
+  }
+  setupToggles(item);
+
+  const rectAfter = item.getBoundingClientRect();
+  const delta = rectAfter.top - rectBefore.top;
+  if(Math.abs(delta)>1 && rectBefore.top < 0){
+    window.scrollBy(0, delta);
+  }
+  liveSet.add(qid);
+}
+
+/* Scroll-idle gate */
+let scrollingTimer=null;
+let isScrolling=false;
+function onScrollStart(){
+  if(!isScrolling){
+    isScrolling=true;
+    document.body.classList.add("scrolling");
+  }
+  clearTimeout(scrollingTimer);
+  scrollingTimer=setTimeout(()=>{
+    isScrolling=false;
+    document.body.classList.remove("scrolling");
+    // after idle, restore nearby placeholders
+    restoreNearPlaceholders();
+  }, 110);
+}
+window.addEventListener("scroll", onScrollStart, {passive:true});
+
+/* Restore near placeholders after scroll idle */
+function restoreNearPlaceholders(){
+  const bandTop = -innerHeight*1.2;
+  const bandBottom = innerHeight*2.2;
+  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
+    const r=ph.getBoundingClientRect();
+    if(r.bottom>bandTop && r.top<bandBottom){
+      idle(()=>restoreItem(ph));
+    }
+  });
+}
+
+/* IntersectionObserver with bigger overscan */
+function initVirtualization(){
+  // store original html for each item
+  items.forEach(it=>{
+    it.dataset._html = it.outerHTML;
+  });
+
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      const target=e.target;
+      if(target.classList.contains("q-item")){
+        const qid=target.dataset.qid;
+        if(e.isIntersecting){
+          liveSet.add(qid);
+        }else{
+          const rect=target.getBoundingClientRect();
+          const far = rect.top > innerHeight*3.2 || rect.bottom < -innerHeight*3.2;
+          if(far){
+            idle(()=>makePlaceholder(target));
+          }
+        }
+      }else if(target.classList.contains("q-placeholder")){
+        // don't restore mid-scroll; wait for idle
+        if(e.isIntersecting && !isScrolling){
+          idle(()=>restoreItem(target));
+        }
+      }
+    });
+  }, { rootMargin:"1400px 0px", threshold:0.01 });
+
+  const observeAll=()=>{
+    document.querySelectorAll(".q-item[data-qid], .q-placeholder.virtual").forEach(n=>{
+      if(!n._observed){
+        n._observed=true;
+        io.observe(n);
+      }
+      if(n.classList.contains("q-placeholder") && !n.dataset._html){
+        const qid=n.dataset.qid;
+        n.dataset._html = items.find(i=>i.dataset.qid===qid)?.dataset._html || "";
+        n.style.height = (heightCache.get(qid) || 140)+"px";
+      }
+    });
+  };
+  observeAll();
+  setInterval(observeAll, 600);
+
+  // initial pass: virtualize far items right away
+  idle(()=>{
+    document.querySelectorAll(".q-item[data-qid]").forEach(it=>{
+      const rect=it.getBoundingClientRect();
+      const far = rect.top > innerHeight*2.4 || rect.bottom < -innerHeight*2.4;
+      if(far) makePlaceholder(it);
+    });
+  });
+}
+
+/* Pre-measure heights once (hidden pass) */
+function preMeasureHeights(){
+  const measurer=document.createElement("div");
+  measurer.style.cssText="position:absolute;left:-99999px;top:0;width:calc(100% - 20px);visibility:hidden;pointer-events:none;";
+  document.body.appendChild(measurer);
+  items.forEach(it=>{
+    const clone=it.cloneNode(true);
+    clone.style.height="auto";
+    clone.querySelectorAll(".mode-slot").forEach(s=>s.innerHTML=""); // no extra content
+    measurer.appendChild(clone);
+    const h=clone.getBoundingClientRect().height || 140;
+    heightCache.set(clone.dataset.qid, h);
+  });
+  measurer.remove();
+}
+
+/* Mode rebuild for live questions */
+function rebuildAllLive(){
+  renderedAnswers.clear();
+  document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
+    const qid=item.dataset.qid;
+    const slot=item.querySelector(".mode-slot");
+    if(slot){
+      slot.innerHTML="";
+      if(mode==="A") renderModeAShell(slot,qid);
+      else renderModeBShell(slot,qid);
+    }
+    setupToggles(item);
+  });
+  document.querySelectorAll(".q-placeholder.virtual").forEach(ph=>{
+    ph.style.height=(heightCache.get(ph.dataset.qid)||140)+"px";
+  });
+}
+
+modeBtn.addEventListener("click", ()=>{
+  mode = (mode==="A") ? "B" : "A";
+  modeDesc.textContent = mode==="A"
+    ? "Mode A: stacked Hint/Answer accordions."
+    : "Mode B: split Hint/Answer row under each question.";
+  modeBtn.textContent = mode==="A" ? "🅰️ Mode A" : "🅱️ Mode B";
+  rebuildAllLive();
+});
+
+document.getElementById("collapseAllBtn").addEventListener("click", ()=>{
+  document.querySelectorAll(".accordion.open").forEach(a=>a.classList.remove("open"));
+  document.querySelectorAll(".mini[data-action='hint'], .mini[data-action='answer']").forEach(btn=>{
+    if(mode==="B") btn.textContent="Open";
   });
 });
-leftItems.forEach(it=>it.addEventListener("mouseenter", ()=>setHighlight(it.dataset.qid)));
 
-const layoutBtn=document.getElementById("layoutBtn");
-let twoCols=false;
-layoutBtn.addEventListener("click", ()=>{
-  twoCols=!twoCols;
-  columns.classList.toggle("one-col", !twoCols);
-  columns.classList.toggle("two-cols", twoCols);
-  layoutBtn.textContent=twoCols?"🧱 2-Column":"📄 1-Column (Merge)";
-  if(twoCols){
-    const qid=getCurrentLeftQidSmart();
-    if(qid){ lastQid=qid; setHighlight(qid); scrollRightTo(qid); }
-  }
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
 });
-document.getElementById("themeBtn").addEventListener("click", ()=>document.body.classList.toggle("dark"));
+
 document.getElementById("downloadBtn").addEventListener("click", ()=>{
   const fullHtml="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
   const blob=new Blob([fullHtml],{type:"text/html"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
-  a.href=url; a.download="grammar_breakdown_14_full_embed_v3.html";
+  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v9_FULLVIRT_NOTESGRAY_MAXSMOOTH.html";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 });
-window.addEventListener("load", ()=>{
-  if(twoCols){
-    const qid=getCurrentLeftQidSmart();
-    if(qid){ lastQid=qid; setHighlight(qid); scrollRightTo(qid); }
+
+/* init shells for visible items */
+document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
+  const qid=item.dataset.qid;
+  const slot=item.querySelector(".mode-slot");
+  if(slot){
+    if(mode==="A") renderModeAShell(slot,qid);
+    else renderModeBShell(slot,qid);
   }
+  setupToggles(item);
 });
 
-function refreshMaps(){
-  buildOffsetMaps();
-  if(columns.classList.contains("two-cols")) syncFromLeft();
-}
-
+preMeasureHeights();
+initVirtualization();
 </script>
 </body>
 </html>
