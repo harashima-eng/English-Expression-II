@@ -191,6 +191,163 @@
       padding:2px 7px;border-radius:999px;margin-left:6px;
     }
 
+    /* ===== Answer layout: ①〜④ + choice analysis ===== */
+    .answer-layout{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:4px;
+      font-size:.96rem;
+    }
+    .answer-section{
+      padding:6px 8px;
+      border-radius:10px;
+      background:rgba(255,255,255,.6);
+      border:0.7px solid rgba(148,163,184,.45);
+    }
+    body.dark .answer-section{
+      background:rgba(15,23,42,.4);
+      border-color:rgba(55,65,81,.9);
+    }
+    .answer-title{
+      font-size:.8rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:2px;
+      color:var(--text-soft);
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .answer-body{
+      font-size:.96rem;
+      line-height:1.8;
+    }
+    .answer-main{
+      font-weight:700;
+      margin-left:4px;
+    }
+    .formula-box{
+      border-radius:10px;
+      padding:6px 8px;
+      margin-top:2px;
+      border:0.7px solid rgba(59,130,246,.45);
+      background:rgba(59,130,246,.06);
+      font-size:.9rem;
+    }
+    body.dark .formula-box{
+      border-color:rgba(129,140,248,.7);
+      background:rgba(79,70,229,.12);
+    }
+    .formula-box .head{
+      font-weight:800;
+      font-size:.82rem;
+      margin-bottom:2px;
+    }
+
+    .wordorder-box{
+      margin-top:6px;
+      padding:6px 8px;
+      border-radius:10px;
+      border:0.7px solid rgba(248,113,113,.55);
+      background:rgba(248,113,113,.06);
+      font-size:.9rem;
+    }
+    body.dark .wordorder-box{
+      border-color:rgba(248,113,113,.9);
+      background:rgba(127,29,29,.35);
+    }
+    .wordorder-title{
+      font-weight:800;
+      font-size:.82rem;
+      margin-bottom:2px;
+    }
+    .wordorder-box ol{
+      margin-left:1.2em;
+      margin-top:2px;
+    }
+    .wordorder-box li{
+      margin-bottom:2px;
+    }
+
+    .choice-list{
+      list-style:none;
+      padding-left:0;
+      margin:4px 0 0;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .choice-row{
+      padding:5px 7px;
+      border-radius:8px;
+      border:0.7px solid rgba(148,163,184,.5);
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      font-size:.9rem;
+      transition:background var(--speed-fast) var(--ease), transform var(--speed-fast) var(--ease), box-shadow var(--speed-fast) var(--ease);
+    }
+    .choice-row.correct{
+      border-color:rgba(22,163,74,.55);
+      background:rgba(22,163,74,.06);
+    }
+    .choice-row.wrong{
+      border-color:rgba(239,68,68,.45);
+      background:rgba(239,68,68,.02);
+    }
+    @media(hover:hover){
+      .choice-row:hover{
+        transform:translateY(-1px);
+        box-shadow:0 4px 10px rgba(15,23,42,.10);
+      }
+    }
+    .choice-label{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-weight:700;
+    }
+    .choice-reason{
+      color:var(--text-soft);
+      font-size:.86rem;
+    }
+
+    /* ===== Correct / wrong icons ===== */
+    .correct-choice,
+    .wrong-choice{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:18px;
+      min-height:18px;
+      padding:2px 7px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.04em;
+      transform:translateY(0);
+      transition:transform var(--speed-fast) var(--ease), box-shadow var(--speed-fast) var(--ease), background var(--speed-fast) var(--ease), border var(--speed-fast) var(--ease);
+    }
+    .correct-choice{
+      border:1px solid rgba(22,163,74,.45);
+      background:rgba(22,163,74,.09);
+      color:#16a34a;
+    }
+    .wrong-choice{
+      border:1px solid rgba(239,68,68,.5);
+      background:rgba(239,68,68,.06);
+      color:#ef4444;
+    }
+    @media(hover:hover){
+      .correct-choice:hover,
+      .wrong-choice:hover{
+        transform:translateY(-1px) scale(1.03);
+        box-shadow:0 4px 10px rgba(15,23,42,.22);
+      }
+    }
+
     /* ===== Mac-app chrome (static, perf-safe) ===== */
     .appbar{
       position:sticky; top:0; z-index:30;
@@ -538,40 +695,268 @@ const DATA = {
   "b1-3": { hint:"否定文の「〜もまた…ない」→ not 〜 either", answer:"If Dick doesn’t go to the festival, I won’t, either.", explain:"先行する否定文を受けて「～もまた…でない」は not ～ either。", jp:"もしディックがその祭りに行かないなら、僕も行かない。" },
   "b1-4": { hint:"「よく休む」→ have a good rest", answer:"Did you have a good rest during the holidays?", explain:"「よい休みをとる」と考え 〈動詞＋形容詞＋名詞〉で表す。", jp:"休暇中はよく休めましたか。" },
   "b1-5": { hint:"「めったに〜ない」→ seldom / rarely", answer:"The writer seldom appears in public.", explain:"seldom/rarely は頻度が非常に低い＝ほぼ否定。", jp:"その作家はめったに人前に姿を見せない。" },
-  "b2-1": { hint:"「最も〜しそうにない人」→ the last person to 〜", answer:"Ben would be the last person to betray us.", explain:"be unlikely to 〜 の自然な言い換え。", jp:"" },
-  "b2-2": { hint:"that ghosts exist を名詞化 → existence of ghosts", answer:"Some people are sure of the existence of ghosts.", explain:"節の内容は名詞構文にできる。", jp:"" },
-  "b2-3": { hint:"not 〜 any of ... = none of ...", answer:"I like none of these pictures.", explain:"none of + 複数名詞 で全体否定。", jp:"" },
-  "b2-4": { hint:"「〜させる」→ make + O + 原形", answer:"What made him change his mind?", explain:"Why? を What made him ... に変える。", jp:"" },
-  "b2-5": { hint:"only = nothing but", answer:"What you are saying is nothing but an armchair theory.", explain:"nothing but ＝「ただ〜にすぎない」。", jp:"" },
-  "b2-6": { hint:"形容詞 + though/as S V", answer:"Tired though they were, they went on working late.", explain:"譲歩の倒置構文。", jp:"" },
+  "b2-1": { hint:"「最も〜しそうにない人」→ the last person to 〜", answer:"Ben would be the last person to betray us.", explain:"be unlikely to 〜 の自然な言い換え。", jp:"ベンが私たちを裏切るなんて一番考えにくい人だ。" },
+  "b2-2": { hint:"that ghosts exist を名詞化 → existence of ghosts", answer:"Some people are sure of the existence of ghosts.", explain:"節の内容は名詞構文にできる。", jp:"幽霊が存在すると信じている人もいる。" },
+  "b2-3": { hint:"not 〜 any of ... = none of ...", answer:"I like none of these pictures.", explain:"none of + 複数名詞 で全体否定。", jp:"私はこれらの絵のどれも好きではない。" },
+  "b2-4": { hint:"「〜させる」→ make + O + 原形", answer:"What made him change his mind?", explain:"Why? を What made him ... に変える。", jp:"なぜ彼は気が変わったのですか。→ 何が彼の気持ちを変えたのですか。" },
+  "b2-5": { hint:"only = nothing but", answer:"What you are saying is nothing but an armchair theory.", explain:"nothing but ＝「ただ〜にすぎない」。", jp:"あなたの言っていることは、机上の空論にすぎない。" },
+  "b2-6": { hint:"形容詞 + though/as S V", answer:"Tired though they were, they went on working late.", explain:"譲歩の倒置構文。", jp:"彼らは疲れていたけれども、遅くまで働き続けた。" },
   "b3-1": { hint:"", answer:"私はよく図書館へ行くし，私の兄[弟]もよく行く．", explain:"so + V + S で「Sもまた〜する」。", jp:"" },
   "b3-2": { hint:"", answer:"裕福ではないからといって人を軽べつすべきではない．", explain:"because 節だけを否定する形。", jp:"" },
   "b3-3": { hint:"", answer:"腹が立ったら，話す前に10数えなさい．", explain:"When (you are) angry の省略。", jp:"" },
   "b3-4": { hint:"", answer:"私たちはここで彼を待つしかない．", explain:"have no choice but to do ＝「〜するしかない」。", jp:"" },
   "b3-5": { hint:"", answer:"このコンピュータのおかげで私たちは時間と労力を省くことができる．", explain:"save O1 O2 の第4文型。", jp:"" },
-  "b4-1": { hint:"be sorry for not -ing", answer:"I’m sorry for not introducing myself sooner.", explain:"否定語 not は否定したい語句の直前。", jp:"" },
-  "b4-2": { hint:"It is ～ that ... の強調構文。", answer:"It was this glass slipper that Cinderella wore at the ball.", explain:"強調したい語句を It was と that の間へ。", jp:"" },
-  "b4-3": { hint:"not ... any longer", answer:"I cannot stand the cold any longer.", explain:"「もはや〜ない」。", jp:"" },
-  "b4-4": { hint:"remind A of B", answer:"Your T-shirt reminds me of my country.", explain:"A remind B of 〜。", jp:"" },
-  "b5-1": { hint:"enable O to do", answer:"The scholarship enabled him to go to university.", explain:"無生物主語で「〜のおかげでOができる」。", jp:"" },
-  "b5-2": { hint:"Never を文頭→倒置", answer:"Never have I seen such a beautiful sight.", explain:"否定副詞前置で助動詞倒置。", jp:"" },
-  "b5-3": { hint:"Her letter says that ...", answer:"Her letter says (that) she will come back to Japan next week.", explain:"say/tell の無生物主語用法。", jp:"" },
-  "b5-4": { hint:"neither + V + S", answer:"My father doesn’t smoke, and neither do I.", explain:"否定内容を受ける倒置。", jp:"" },
-  "b5-5": { hint:"the rumor that ...", answer:"Have you heard the rumor that they will get married?", explain:"同格の that 節。", jp:"" },
-  "fc-1": { hint:"", answer:"b. I hope not.", explain:"望ましくないことに「そうでないといい」。", jp:"" },
-  "fc-2": { hint:"", answer:"a. No kidding.", explain:"驚き「まさか！」。", jp:"" },
-  "a1-1": { hint:"beyond my control", answer:"d. beyond", explain:"「及ばない」＝ beyond。", jp:"" },
-  "a1-2": { hint:"not 〜 either", answer:"b. either", explain:"否定＋「〜もまた」。", jp:"" },
-  "a1-3": { hint:"anything but", answer:"a. anything", explain:"anything but perfect「決して完全でない」。", jp:"" },
-  "a1-4": { hint:"enable O to do", answer:"d. enabled", explain:"enable の過去分詞。", jp:"" },
-  "a1-5": { hint:"far from", answer:"d. far", explain:"far from satisfying。", jp:"" },
-  "a1-6": { hint:"How in the world", answer:"b. world", explain:"疑問強調の慣用句。", jp:"" },
+  "b4-1": { hint:"be sorry for not -ing", answer:"I’m sorry for not introducing myself sooner.", explain:"否定語 not は否定したい語句の直前。", jp:"もっと早く自己紹介をしなくてすみません。" },
+  "b4-2": { hint:"It is ～ that ... の強調構文。", answer:"It was this glass slipper that Cinderella wore at the ball.", explain:"強調したい語句を It was と that の間へ。", jp:"シンデレラが舞踏会ではいていたのは、このガラスの靴だった。" },
+  "b4-3": { hint:"not ... any longer", answer:"I cannot stand the cold any longer.", explain:"「もはや〜ない」。", jp:"私はもはやその寒さには耐えられない。" },
+  "b4-4": { hint:"remind A of B", answer:"Your T-shirt reminds me of my country.", explain:"A remind B of 〜。", jp:"あなたのTシャツを見ると、自分の国を思い出す。" },
+  "b5-1": { hint:"enable O to do", answer:"The scholarship enabled him to go to university.", explain:"無生物主語で「〜のおかげでOができる」。", jp:"その奨学金のおかげで彼は大学に行くことができた。" },
+  "b5-2": { hint:"Never を文頭→倒置", answer:"Never have I seen such a beautiful sight.", explain:"否定副詞前置で助動詞倒置。", jp:"私はこんな美しい景色をこれまで見たことがない。" },
+  "b5-3": { hint:"Her letter says that ...", answer:"Her letter says (that) she will come back to Japan next week.", explain:"say/tell の無生物主語用法。", jp:"彼女の手紙によると、彼女は来週日本に帰ってくるそうだ。" },
+  "b5-4": { hint:"neither + V + S", answer:"My father doesn’t smoke, and neither do I.", explain:"否定内容を受ける倒置。", jp:"私の父はタバコを吸わないし、私も吸わない。" },
+  "b5-5": { hint:"the rumor that ...", answer:"Have you heard the rumor that they will get married?", explain:"同格の that 節。", jp:"彼らが結婚するといううわさを耳にしましたか。" },
+  "fc-1": { hint:"「そうでないといいのだけど」→ I hope not.", answer:"b. I hope not.", explain:"「腕が折れているかもしれない」状況なので，「そうでないといいのだけど」と言う。", jp:"" },
+  "fc-2": { hint:"驚きを表す決まり文句 → No kidding!", answer:"a. No kidding.", explain:"信じられない気持ちを表す「まさか！／うそでしょ！」。", jp:"" },
+  "a1-1": { hint:"beyond my control", answer:"d. beyond", explain:"「自分の力の及ばない」→ beyond my control。", jp:"" },
+  "a1-2": { hint:"not A, not B, either.", answer:"b. either", explain:"否定文で「〜もまた…ない」は either。", jp:"" },
+  "a1-3": { hint:"anything but = far from", answer:"a. anything", explain:"anything but perfect = 「決して完璧ではない」。", jp:"" },
+  "a1-4": { hint:"enable O to do", answer:"d. enabled", explain:"enable O to do「Oが〜できるようにする」。", jp:"" },
+  "a1-5": { hint:"far from = nowhere near", answer:"d. far", explain:"far from satisfying「満足にはほど遠い」。", jp:"" },
+  "a1-6": { hint:"How in the world ...?", answer:"b. world", explain:"How in the world did you ...? 「いったいどうやって」", jp:"" },
   "a2-1": { hint:"When was it that ...?", answer:"When was it that you heard from your brother?", explain:"強調構文の疑問形。", jp:"" },
-  "a2-2": { hint:"never 〜 without ...ing", answer:"I never hear that story without remembering him.", explain:"二重否定で「必ず」。", jp:"" },
-  "a2-3": { hint:"not 〜 until ...", answer:"You don’t appreciate your own country until you leave it.", explain:"「…して初めて」。", jp:"" },
+  "a2-2": { hint:"never 〜 without ...ing", answer:"I never hear that story without remembering him.", explain:"never A without B ＝「Aすると必ずBする」。", jp:"" },
+  "a2-3": { hint:"not 〜 until ...", answer:"You don’t appreciate your own country until you leave it.", explain:"「離れてみて初めて〜がわかる」。", jp:"" },
   "a2-4": { hint:"S will make O do", answer:"A little reflection will make you realize you are wrong.", explain:"make O do 構文。", jp:"" },
-  "a3-1": { hint:"prevent O from -ing", answer:"A snow storm prevented her from going to school.", explain:"「〜のために行けない」→ prevent。", jp:"" },
-  "a3-2": { hint:"not 〜 at all", answer:"I am not satisfied with the result at all.", explain:"否定を強める副詞句。", jp:"" }
+  "a3-1": { hint:"prevent O from -ing", answer:"A snow storm prevented her from going to school.", explain:"「〜のために行けない」→ prevent O from -ing。", jp:"吹雪のために彼女は学校へ行けなかった。" },
+  "a3-2": { hint:"not 〜 at all", answer:"I am not satisfied with the result at all.", explain:"否定を強める副詞句 at all。", jp:"私はその結果にまったく満足していない。" }
+};
+
+/* Multiple-choice choice-by-choice analysis */
+const CHOICES = {
+  "fc-1": {
+    choices: [
+      {
+        key:"a",
+        text:"I hope so",
+        correct:false,
+        reason:"「そうだといいですね」という意味で、腕が折れているかもしれない相手には不自然。"
+      },
+      {
+        key:"b",
+        text:"I hope not",
+        correct:true,
+        reason:"「そうでないといいのだけれど」という意味で、「腕が折れていないといいね」というニュアンスになり最も自然。"
+      },
+      {
+        key:"c",
+        text:"I’m sorry not",
+        correct:false,
+        reason:"自然な英語では使わない形で、文法的にも不自然。"
+      },
+      {
+        key:"d",
+        text:"I’m afraid not",
+        correct:false,
+        reason:"「残念ながらそうではありません」という“否定の返事”であり、ここでは相手のケガを心配する流れに合わない。"
+      }
+    ]
+  },
+  "fc-2": {
+    choices: [
+      {
+        key:"a",
+        text:"No kidding",
+        correct:true,
+        reason:"「マジで？」「うそでしょ？」という驚きを表すくだけた表現で、急な結婚のニュースにぴったり。"
+      },
+      {
+        key:"b",
+        text:"No offense",
+        correct:false,
+        reason:"「気を悪くしないでね」という前置きで、ここでは意味が合わない。"
+      },
+      {
+        key:"c",
+        text:"No problem",
+        correct:false,
+        reason:"「問題ないよ」「大丈夫」という意味で、驚きではない。"
+      },
+      {
+        key:"d",
+        text:"No sweat",
+        correct:false,
+        reason:"「お安い御用」「楽勝だよ」という意味で、ここでも文脈に合わない。"
+      }
+    ]
+  },
+  "a1-1": {
+    choices: [
+      {
+        key:"a",
+        text:"in",
+        correct:false,
+        reason:"in my control とは普通言わず、意味も「内側に」になってしまう。"
+      },
+      {
+        key:"b",
+        text:"out",
+        correct:false,
+        reason:"out my control とは言わず、前置詞としての形もおかしい。"
+      },
+      {
+        key:"c",
+        text:"over",
+        correct:false,
+        reason:"over my control という表現は一般的ではない。"
+      },
+      {
+        key:"d",
+        text:"beyond",
+        correct:true,
+        reason:"beyond my control = 「自分の力の及ばない」。事故などの文脈でよく使う定番表現。"
+      }
+    ]
+  },
+  "a1-2": {
+    choices: [
+      {
+        key:"a",
+        text:"too",
+        correct:false,
+        reason:"too は肯定文で「〜もまた」の意味。否定文では使えない。"
+      },
+      {
+        key:"b",
+        text:"either",
+        correct:true,
+        reason:"not A ..., and not B, either. の形で「Bもまた〜ない」となる。"
+      },
+      {
+        key:"c",
+        text:"instead",
+        correct:false,
+        reason:"「その代わりに」という意味で、ここでは文法的にも意味的にも不適切。"
+      },
+      {
+        key:"d",
+        text:"also",
+        correct:false,
+        reason:"also は主に肯定文で「〜もまた」。否定文では使わない。"
+      }
+    ]
+  },
+  "a1-3": {
+    choices: [
+      {
+        key:"a",
+        text:"anything",
+        correct:true,
+        reason:"anything but perfect = 「決して完璧とは言えない」。but の後ろを強く否定する決まり文句。"
+      },
+      {
+        key:"b",
+        text:"something",
+        correct:false,
+        reason:"something but perfect という表現はなく、不自然。"
+      },
+      {
+        key:"c",
+        text:"nothing",
+        correct:false,
+        reason:"nothing but perfect だと「完璧そのもの」という逆の意味になってしまう。"
+      },
+      {
+        key:"d",
+        text:"everything",
+        correct:false,
+        reason:"everything but perfect は「完璧以外のすべて」のような意味になり、ここでは合わない。"
+      }
+    ]
+  },
+  "a1-4": {
+    choices: [
+      {
+        key:"a",
+        text:"let",
+        correct:false,
+        reason:"has let us to quickly ... とは言わない。let O do で to は不要。"
+      },
+      {
+        key:"b",
+        text:"made",
+        correct:false,
+        reason:"has made us to quickly ... も make O do の形と合わず、不自然。"
+      },
+      {
+        key:"c",
+        text:"suggested",
+        correct:false,
+        reason:"suggest O to do という形は基本的に誤りで、この文には合わない。"
+      },
+      {
+        key:"d",
+        text:"enabled",
+        correct:true,
+        reason:"has enabled us to do ... で「〜できるようにしてくれた」という意味になり、文意にぴったり。"
+      }
+    ]
+  },
+  "a1-5": {
+    choices: [
+      {
+        key:"a",
+        text:"almost",
+        correct:false,
+        reason:"almost from satisfying とは言わず、almost は副詞で別の位置に置く。"
+      },
+      {
+        key:"b",
+        text:"close",
+        correct:false,
+        reason:"close from satisfying という形はない。close to ならまだ自然だが、ここは定番表現ではない。"
+      },
+      {
+        key:"c",
+        text:"all",
+        correct:false,
+        reason:"all from satisfying という形はなく、意味も通らない。"
+      },
+      {
+        key:"d",
+        text:"far",
+        correct:true,
+        reason:"far from satisfying = 「満足とはほど遠い」。評価を強く否定する決まり文句。"
+      }
+    ]
+  },
+  "a1-6": {
+    choices: [
+      {
+        key:"a",
+        text:"space",
+        correct:false,
+        reason:"How in the space ...? という言い方はしない。"
+      },
+      {
+        key:"b",
+        text:"world",
+        correct:true,
+        reason:"How in the world ...? で「いったいどうやって？」という強い疑問を表す定番表現。"
+      },
+      {
+        key:"c",
+        text:"air",
+        correct:false,
+        reason:"How in the air ...? という定型表現は存在しない。"
+      },
+      {
+        key:"d",
+        text:"cloud",
+        correct:false,
+        reason:"How in the cloud ...? も定番表現ではなく、意味がわかりづらい。"
+      }
+    ]
+  }
 };
 
 let mode = "A";
@@ -579,12 +964,120 @@ const modeBtn = document.getElementById("modeBtn");
 const modeDesc = document.getElementById("modeDesc");
 const renderedAnswers = new Set();
 
+/* utility: MC or not */
+function isMultipleChoice(qid){
+  return !!CHOICES[qid];
+}
+
 /* utilities */
 function hintText(d){
   return d.hint && d.hint.trim()
     ? d.hint
     : "この問題はヒントなし。まず自力で解いてみよう。必要なら解答を開いて確認！";
 }
+
+/* word-order helper: detect if this q has a [ ... ] block */
+function getWordOrderInfo(qid){
+  const item = document.querySelector(`.q-item[data-qid="${qid}"]`);
+  if(!item) return null;
+  const raw = item.querySelector(".q-raw");
+  if(!raw) return null;
+  const text = raw.textContent || "";
+  // かっこ内だけざっくり抜き出す
+  const match = text.match(/\[(.+)\]/);
+  const inside = match ? match[1].trim() : "";
+  return {
+    rawText: text.trim(),
+    words: inside
+  };
+}
+
+/* choice-by-choice HTML */
+function buildChoiceAnalysis(qid){
+  const pack = CHOICES[qid];
+  if(!pack || !pack.choices) return `
+    <p>この問題は選択肢問題です。正しい選択肢の意味と文法を確認し、他の選択肢がなぜ合わないのかも日本語で説明してあげましょう。</p>
+  `;
+  const rows = pack.choices.map(ch=>{
+    const cls = ch.correct ? "choice-row correct" : "choice-row wrong";
+    const icon = ch.correct
+      ? '<span class="correct-choice">✓</span>'
+      : '<span class="wrong-choice">✗</span>';
+    return `
+      <li class="${cls}">
+        <div class="choice-label">${icon}<span>${ch.key}. ${ch.text}</span></div>
+        <div class="choice-reason">${ch.reason}</div>
+      </li>
+    `;
+  }).join("");
+  return `
+    <ul class="choice-list">
+      ${rows}
+    </ul>
+  `;
+}
+
+/* unified ①〜④ answer layout (used in both modes) */
+function buildAnswerLayout(qid){
+  const d = DATA[qid] || {};
+  const mc = isMultipleChoice(qid);
+  const wordInfo = getWordOrderInfo(qid);
+
+  const formulaText = d.hint && d.hint.trim()
+    ? d.hint
+    : "この問題では，否定・強調・倒置などの特殊構文の形に注目してパターンを覚えよう。";
+
+  const choiceHtml = mc
+    ? buildChoiceAnalysis(qid)
+    : `<p>この問題は語句補充・書きかえ・英作タイプです。正解の形と文法ポイントを押さえたうえで，<br>「なぜ他の形はダメなのか？」も日本語で説明してあげると理解が深まります。</p>`;
+
+  const wordOrderHtml = wordInfo ? `
+    <div class="wordorder-box">
+      <div class="wordorder-title">Word Order Breakdown（語順のステップ）</div>
+      <ol>
+        <li>かっこ内の語を全部確認する：${wordInfo.words || "（語順ヒントあり）"}</li>
+        <li>日本語の意味から，基本の語順（S＋V＋O など）をイメージする。</li>
+        <li>教科書で習った決まり文句（例：be sorry for -ing / It is ... that ～ など）に当てはめて並べる。</li>
+      </ol>
+    </div>
+  ` : "";
+
+  return `
+    <div class="answer-layout">
+      <div class="answer-section">
+        <div class="answer-title">① 正解</div>
+        <div class="answer-body">
+          <span class="correct-choice">✓</span>
+          <span class="answer-main">${d.answer || ""}</span>
+        </div>
+      </div>
+      <div class="answer-section">
+        <div class="answer-title">② 文法ポイント <span>📖</span></div>
+        <div class="answer-body">
+          <div class="formula-box">
+            <div class="head">📖 文法公式</div>
+            <div>${formulaText}</div>
+          </div>
+        </div>
+      </div>
+      <div class="answer-section">
+        <div class="answer-title">③ 解説</div>
+        <div class="answer-body">
+          <div>${d.explain || "この構文の意味と語順を，自分のノートに日本語でまとめておこう。"}</div>
+          ${d.jp ? `<div class="jp">和訳：${d.jp}</div>` : ""}
+          ${wordOrderHtml}
+        </div>
+      </div>
+      <div class="answer-section">
+        <div class="answer-title">④ 選択肢分析</div>
+        <div class="answer-body">
+          ${choiceHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function buildHintBody(qid){
   const d = DATA[qid] || {};
   const noHint = (!d.hint || !d.hint.trim());
@@ -597,14 +1090,11 @@ function buildHintBody(qid){
     </div>`;
 }
 function buildAnswerBody(qid){
-  const d = DATA[qid] || {};
   return `
     <div class="accordion bubble-wrap answer" data-box="answer">
       <div class="accordion-inner bubble answer">
         <div class="label">✅ ANSWER</div>
-        <div><b>${d.answer||""}</b></div>
-        ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
-        ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
+        ${buildAnswerLayout(qid)}
       </div>
     </div>`;
 }
@@ -664,12 +1154,7 @@ function injectAnswerIfNeeded(item){
     const answerBody=item.querySelector("[data-answer-body]");
     if(hintBody && !hintBody.innerHTML) hintBody.innerHTML = hintText(DATA[qid]||{});
     if(answerBody){
-      const d=DATA[qid]||{};
-      answerBody.innerHTML = `
-        <div><b>${d.answer||""}</b></div>
-        ${d.explain?`<div style="margin-top:6px;">${d.explain}</div>`:""}
-        ${d.jp?`<div class="jp">和訳：${d.jp}</div>`:""}
-      `;
+      answerBody.innerHTML = buildAnswerLayout(qid);
     }
   }
   renderedAnswers.add(qid);
@@ -750,7 +1235,7 @@ document.getElementById("downloadBtn").addEventListener("click", ()=>{
   const blob=new Blob([fullHtml],{type:"text/html"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
-  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v9_NOTESGRAY_SMOOTH.html";
+  a.href=url; a.download="grammar_breakdown_14_singlecol_2modes_ULTRALITE_v10_ICONS_4STEP.html";
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
 });
 
@@ -764,9 +1249,6 @@ document.querySelectorAll(".q-item[data-qid]").forEach(item=>{
   }
   setupToggles(item);
 });
-
-
-
 
 /* ===== Flatten sections (hard reset) =====
    Guarantee every .section is a direct child of #contentRoot.
@@ -805,7 +1287,7 @@ function flattenSections(){
   });
 }
 flattenSections();
-/* ===== Mac‑app nav + command palette (lightweight) ===== */
+/* ===== Mac-app nav + command palette (lightweight) ===== */
 const sideList = document.getElementById("sideList");
 const jumpBtn = document.getElementById("jumpBtn");
 const palette = document.getElementById("palette");
