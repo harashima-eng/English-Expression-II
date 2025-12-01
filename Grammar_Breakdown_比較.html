@@ -27,6 +27,66 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
+        /* ====== New header + toolbar ====== */
+        .page-header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            padding: 18px 22px;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .header-main h1 {
+            font-size: 1.9rem;
+            margin-bottom: 4px;
+        }
+
+        .header-sub {
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 999px;
+            transition: 0.15s transform, 0.15s opacity, 0.15s box-shadow;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.96;
+        }
+
+        .btn-ghost {
+            background: #ffffff;
+            color: #111827;
+        }
+
+        .btn-dark {
+            background: #111827;
+            color: #ffffff;
+        }
+
+        /* ====== Original styles ====== */
+
         h1 {
             text-align: center;
             color: #667eea;
@@ -278,6 +338,14 @@
                 padding: 20px;
             }
 
+            .header-main h1 {
+                font-size: 1.4rem;
+            }
+
+            .page-header {
+                padding: 14px 16px;
+            }
+
             h1 {
                 font-size: 1.8em;
             }
@@ -294,7 +362,18 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔥 比較 (Comparative) Grammar Test Breakdown 🔥</h1>
+        <!-- New header with toolbar -->
+        <header class="page-header">
+            <div class="header-main">
+                <h1>🔥 比較 (Comparative) Grammar Test Breakdown 🔥</h1>
+                <p class="header-sub">DUALSCOPE 英語総合演習 Lesson 9｜比較 全表現・詳しい解説つき</p>
+            </div>
+            <div class="toolbar">
+                <button class="btn btn-ghost" data-action="open-all">全部ひらく</button>
+                <button class="btn btn-ghost" data-action="close-all">全部とじる</button>
+                <button class="btn btn-dark" data-action="download">⬇️ このページをダウンロード</button>
+            </div>
+        </header>
         
         <div class="test-info">
             <h2>📚 DUALSCOPE 英語総合演習 - Lesson 9</h2>
@@ -1405,7 +1484,9 @@
             const content = header.nextElementSibling;
             const icon = header.querySelector('.toggle-icon');
             content.classList.toggle('active');
-            icon.classList.toggle('active');
+            if (icon) {
+                icon.classList.toggle('active');
+            }
         }
         
         function toggleAnswer(button) {
@@ -1424,6 +1505,43 @@
             const firstSection = document.querySelector('.section-header');
             if (firstSection) {
                 toggleSection(firstSection);
+            }
+        });
+
+        // Toolbar actions: open-all / close-all / download
+        document.addEventListener('click', function(e) {
+            const actionBtn = e.target.closest('[data-action]');
+            if (!actionBtn) return;
+
+            const action = actionBtn.getAttribute('data-action');
+
+            if (action === 'open-all' || action === 'close-all') {
+                const headers = document.querySelectorAll('.section-header');
+                headers.forEach(function(header) {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.toggle-icon');
+                    const isOpen = content.classList.contains('active');
+
+                    if (action === 'open-all' && !isOpen) {
+                        content.classList.add('active');
+                        if (icon) icon.classList.add('active');
+                    }
+                    if (action === 'close-all' && isOpen) {
+                        content.classList.remove('active');
+                        if (icon) icon.classList.remove('active');
+                    }
+                });
+            }
+
+            if (action === 'download') {
+                const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+                const blob = new Blob([html], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'grammar_breakdown_comparative.html';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
             }
         });
     </script>
